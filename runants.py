@@ -1,6 +1,9 @@
 # This runs on Python 2
 from classes import City
 
+#!!!ADDED BY HYOUNG" - For graph functionality
+from collections import defaultdict
+import sys
 
 # Main is somewhere over here
 city = City(8, 9)
@@ -40,6 +43,56 @@ OutputData(bestTour)
 # ### the distance matrix so I'll leave that up to you.
 # ### Calculate the distances based on Project
 # ### Instructions.
+
+def ReadCityData():
+    #Get input file from the command line
+    #Ref: https://anenadic.github.io/2014-11-10-manchester/novice/python/06-cmdline-non-interactive.html
+    script = sys.argv[0]
+    fileName = sys.argv[1]
+	
+    #Read data from a target file
+    #Ref: https://stackoverflow.com/questions/29581804/python-reading-input-from-a-file
+
+    cities =[] 
+
+    with open(fileName, "r") as file: 
+        for line in file:
+
+            line = line.split()
+            if line:
+                    line = [int(i) for i in line]  #converts elements to integers
+                    cities.append(line)
+    return(cities)
+#####################################################################################
+# End of ReadCityData
+#####################################################################################
+
+
+
+#####################################################################################
+# CalcDistance(cityA, cityB)
+#
+# Takes two elements from the cities list then outputs distance between them
+#
+# ARGUMENTS: two elements from cities list from ReadCityData()
+# RETURNS:   distance between two cities
+#####################################################################################
+import math
+def CalcDistance(cityA, cityB):
+    x = cityA[1] - cityB[1]
+    y = cityA[2] - cityB[2]
+
+    temp = (x*x)+(y*y)
+    distance = int(math.sqrt(temp))
+
+    return(distance)
+
+#####################################################################################
+#
+# End of CalcDistance
+#
+#####################################################################################
+
 
 
 # Initialize Ants
