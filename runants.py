@@ -1,9 +1,8 @@
-# This runs on Python 2
+# This runs on Python 3
 from classes import City
-
-#!!!ADDED BY HYOUNG" - For graph functionality
-from collections import defaultdict
 import sys
+import math
+
 
 # Main is somewhere over here
 city = City(8, 9)
@@ -52,7 +51,6 @@ def ReadCityData():
 	
     #Read data from a target file
     #Ref: https://stackoverflow.com/questions/29581804/python-reading-input-from-a-file
-
     cities =[] 
 
     with open(fileName, "r") as file: 
@@ -77,7 +75,6 @@ def ReadCityData():
 # ARGUMENTS: two elements from cities list from ReadCityData()
 # RETURNS:   distance between two cities
 #####################################################################################
-import math
 def CalcDistance(cityA, cityB):
     x = cityA[1] - cityB[1]
     y = cityA[2] - cityB[2]
@@ -86,11 +83,8 @@ def CalcDistance(cityA, cityB):
     distance = int(math.sqrt(temp))
 
     return(distance)
-
 #####################################################################################
-#
 # End of CalcDistance
-#
 #####################################################################################
 
 
