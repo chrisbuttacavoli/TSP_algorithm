@@ -86,7 +86,15 @@ class Graph:
 	#	value of 0 for each edge since no ant has traversed anything yet.
 	#####################################################################################
 	def _initPheromones(cities):
-		pass
+   		import math
+    		pheromone2dArray = []
+    		for i in range(0, len(cities)):
+        		newElement = []
+      			for j in range(0, len(cities)):
+        			newElement.append(0)
+        		pheromone2dArray.append(newElement)
+			
+    		return(pheromone2dArray)
 
 
 	#####################################################################################
