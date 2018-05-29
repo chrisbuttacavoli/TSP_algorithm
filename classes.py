@@ -54,7 +54,7 @@ class Graph:
 		self.pheromones = _initPheromones(cities)
 		self.distances = _calculateDistances(cities) # Insert Hyoung's original function here
 
-
+		
 	#####################################################################################
 	# Performs a one time calculation between each city and stores it in a 2D array
 	#
@@ -62,7 +62,19 @@ class Graph:
 	# Output: 2D array of distances between each city
 	#####################################################################################
 	def _calculateDistances(cities):
-		pass
+		import math
+		array2d = []
+   		for i in range(0, len(cities)):
+        		newElement = []
+        		for j in range(0, len(cities)):
+        			x = cities[i][1] - cities[j][1]
+        			y = cities[j][2] - cities[j][2]
+        			temp = (x*x) + (y*y)
+        			distance = int(math.sqrt(temp))
+        			newElement.append(distance)
+        		array2d.append(newElement)
+
+    		return(array2d)
 
 	
 	#####################################################################################
