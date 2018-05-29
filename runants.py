@@ -26,29 +26,31 @@ print city.x, city.y
 
 # Goes something like so...
 numIterations = 20
-cities, distances = ReadCityData()
-ants = InitializeAnts(cities, distances)
+cities = ReadCityData(sys.argv[1])
+graph = Graph(cities) # Each edge of the graph has its own pheromones
+ants = [Ant(len(cities), city) for city in cities] # Start an ant at each city
+
 for n in range(1, numIterations):
-	bestTour = PerformTour(ants, cities, distances)
+	for ant in ants:
+		while ant.hasNotCompletedTour:
+			ant.move(graph)
+		bestTour = SelectBestTour(ant.tour, bestTour)
+	
+	graph.updatePheromones(ants)
 
 OutputData(bestTour)
 ###########################
 
 
-# ReadCityData
-# ### Reads data from a text file, outputs a list of
-# ### cities and a their distances to each other city.
-# ### Not sure what the most efficient way to store
-# ### the distance matrix so I'll leave that up to you.
-# ### Calculate the distances based on Project
-# ### Instructions.
-
-def ReadCityData():
-    #Get input file from the command line
-    #Ref: https://anenadic.github.io/2014-11-10-manchester/novice/python/06-cmdline-non-interactive.html
-    script = sys.argv[0]
-    fileName = sys.argv[1]
-	
+#####################################################################################
+# ReadCityData(fileName)
+#
+# Populates a list of cities from a text file per Instructions.pdf
+#
+# Inputs: the name of the file to read from
+# Outputs: a list of cities
+#####################################################################################
+def ReadCityData(fileName):	
     #Read data from a target file
     #Ref: https://stackoverflow.com/questions/29581804/python-reading-input-from-a-file
     cities =[] 
@@ -61,10 +63,6 @@ def ReadCityData():
                     line = [int(i) for i in line]  #converts elements to integers
                     cities.append(line)
     return(cities)
-#####################################################################################
-# End of ReadCityData
-#####################################################################################
-
 
 
 #####################################################################################
@@ -72,8 +70,8 @@ def ReadCityData():
 #
 # Takes two elements from the cities list then outputs distance between them
 #
-# ARGUMENTS: two elements from cities list from ReadCityData()
-# RETURNS:   distance between two cities
+# Inputs: two elements from cities list from ReadCityData()
+# Outputs: distance between two cities
 #####################################################################################
 def CalcDistance(cityA, cityB):
     x = cityA[1] - cityB[1]
@@ -83,41 +81,20 @@ def CalcDistance(cityA, cityB):
     distance = int(math.sqrt(temp))
 
     return(distance)
+
+
+
 #####################################################################################
-# End of CalcDistance
+# OutputData(fileName, tour)
+# Outputs a file:
+# - First line is the total length of the tour.
+# - Second line and onward is the ordered name of cities, so each city gets
+# 		its own lines
+# - Name of output file: {inputFileName.txt}.tour
+#
+# Inputs:
+# - fileName: Name of the file to get the data from
+# - tour: The tour data, as a Tour class
 #####################################################################################
-
-
-
-# Initialize Ants
-# ### Should place an ant starting at each city.
-
-
-# PerformTour
-# ### This will execute N times until we are happy with
-# ### the optimal solution or run out of time/iterations.
-# ### This binds the algorithm together after everything
-# ### has been initialized.
-
-
-# MoveAnt
-# ### Uses a probability function based on next closest
-# ### city and the amount of pheromones on each path
-# ### adjacent to the current city to choose the next
-# ### city. For now, this can just be randomly determined
-# ### until we work out details for the other functions.
-
-
-# UpdatePheromones
-# ### After an ant completes a tour, two things happen.
-# ### First, the previous pheromones that were laid
-# ### begin to evaporate. Second, new pheromones are
-# ### laid by each ant for the paths that they took.
-
-
-# OutputData
-# ### Outputs a file:
-# ### First line is the total length of the tour.
-# ### Second line and onward is the ordered name of
-# ### cities, so each city gets its own lines
-# ### Name of output file: {inputFileName.txt}.tour
+def OutputData(fileName, tour):
+	pass
