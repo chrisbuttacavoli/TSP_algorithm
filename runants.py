@@ -86,15 +86,16 @@ def CalcDistance(cityA, cityB):
 
 #####################################################################################
 # OutputData(fileName, tour)
-# Outputs a file:
-# - First line is the total length of the tour.
-# - Second line and onward is the ordered name of cities, so each city gets
-# 		its own lines
-# - Name of output file: {inputFileName.txt}.tour
+# Outputs the best tour to a file.
 #
 # Inputs:
 # - fileName: Name of the file to get the data from
 # - tour: The tour data, as a Tour class
+# Outputs: a file containing:
+# - First line is the total length of the tour.
+# - Second line and onward is the ordered name of cities, so each city gets
+# 		its own lines
+# - Name of output file: {inputFileName.txt}.tour
 #####################################################################################
 def OutputData(fileName, tour):
 	pass
