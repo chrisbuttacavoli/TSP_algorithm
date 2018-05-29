@@ -4,27 +4,11 @@ import sys
 import math
 
 
-# Main is somewhere over here
-city = City(8, 9)
-print city.x, city.y
-
-##########
-# OUTLINE
-##########
-# These high level steps are a first pass at what our
-# program would be composed of. These functions are
-# guidelines and can be adjusted as needed. We should
-# strongly consider moving them to other files to keep
-# main looking "clean".
-#####################
-
-
 ###########################
-# Main goes below...
+# Main procedure below...
 ###########################
 ###########################
 
-# Goes something like so...
 numIterations = 20
 cities = ReadCityData(sys.argv[1])
 graph = Graph(cities) # Each edge of the graph has its own pheromones

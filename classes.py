@@ -84,7 +84,7 @@ class Graph:
 	# Input: nothing
 	# Output: void
 	#####################################################################################
-	def performEvaporation():
+	def _performEvaporation():
 		pass
 	
 
@@ -96,4 +96,7 @@ class Graph:
 	# Output: void
 	#####################################################################################
 	def updatePheromones(ants):
+		self._performEvaporation()
+
+		# Do other stuff
 		pass
