@@ -1,5 +1,5 @@
 # This runs on Python 3
-from classes import City
+from classes import City, Graph, Ant
 import sys
 import math
 
@@ -83,3 +83,4 @@ def CalcDistance(cityA, cityB):
 #####################################################################################
 def OutputData(fileName, tour):
 	pass
+
