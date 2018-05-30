@@ -197,8 +197,10 @@ class Graph:
 	# Output: void
 	#####################################################################################
 	def _performEvaporation():
-		pass
-	
+		
+		for i in range(0, len(self.pheromones)):
+        		for j in range(0, len(self.pheromones)):
+        			self.pheromones[i][j] = self.pheromones[i][j] - 1 #Pheromone evap equation
 
 	#####################################################################################
 	# Loops through each ant checking the cities they visited, then it will update
