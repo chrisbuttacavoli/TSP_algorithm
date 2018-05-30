@@ -197,7 +197,11 @@ class Graph:
 	# Output: void
 	#####################################################################################
 	def _performEvaporation():
-		pass
+		for i in range(0, len(self.pheromone)):
+			for j in range(0, len(self.pheromone)):
+				if self.phermone[i][j] > 0:
+					self.phermone[i][j] = aList[i][j] - 1
+				
 	
 
 	#####################################################################################
