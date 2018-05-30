@@ -198,7 +198,12 @@ class Graph:
 	#####################################################################################
 	def _performEvaporation():
 		
-		pass
+		import random
+		RHO = random.uniform(0, 1) #evaporation constant
+
+		for i in range(0, len(self.pheromones)):
+			for j in range(0, len(self.pheromones)):
+				self.pheromones[i][j] = self.pheromones[i][j] * RHO
 
 	#####################################################################################
 	# Loops through each ant checking the cities they visited, then it will update
