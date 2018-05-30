@@ -209,11 +209,18 @@ class Graph:
 	# Loops through each ant checking the cities they visited, then it will update
 	# the concentration of the pheromones on each edge.
 	#
-	# Input: list of ants
+	# Input: list of ants, list of cities
 	# Output: void
 	#####################################################################################
-	def updatePheromones(ants):
+	def updatePheromones(ants, cities):
 		self._performEvaporation()
-
-		# Do other stuff
-		pass
+		
+		Q = 1.5 #constant that is arbitrarily assigned as a place holder
+		
+		for i in range(0, len(self.pheromones)):
+			for j in range(0, len(self.pheromones)):
+				if(ants.currentCity == cities[i] and ants.nextCity == cities[j] ):
+					Lk = _calculateDistances(cities[i], cities[j]) #length of the tour
+					self.pheromones[i][j] += Q/Lk
+				else:
+					pass
