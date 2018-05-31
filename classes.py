@@ -217,11 +217,12 @@ class Graph:
 		
 		Q = 1.5 #constant that is arbitrarily assigned as a place holder
 		
-		for i in range(0, len(self.pheromones)):
-			for j in range(0, len(self.pheromones)):
-				if(ants.currentCity == cities[i] and ants.nextCity == cities[j] ):
-					Lk = _calculateDistances(cities[i], cities[j]) #length of the tour
-					self.pheromones[i][j] += Q/Lk
-					self.pheromones[j][i] = self.pheromones[i][j]
-				else:
-					pass
+		for k in range(0, len(ants)):
+			for i in range(0, len(self.pheromones)):
+				for j in range(0, len(self.pheromones)):
+					if(ants[k].currentCity == cities[i] and ants[k].nextCity == cities[j] ):
+						Lk = _calculateDistances(cities[i], cities[j]) #length of the tour
+						self.pheromones[i][j] += Q/Lk
+						self.pheromones[j][i] = self.pheromones[i][j]
+					else:
+						pass
