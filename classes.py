@@ -222,5 +222,6 @@ class Graph:
 				if(ants.currentCity == cities[i] and ants.nextCity == cities[j] ):
 					Lk = _calculateDistances(cities[i], cities[j]) #length of the tour
 					self.pheromones[i][j] += Q/Lk
+					self.pheromones[j][i] = self.pheromones[i][j]
 				else:
 					pass
