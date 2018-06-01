@@ -1,5 +1,8 @@
 # This runs on Python 3
-from classes import City, Graph, Ant
+from ant import Ant
+from city import City
+from graph import Graph
+from tour import Tour
 from fileOperations import ReadCityData, OutputData
 import sys
 import math
