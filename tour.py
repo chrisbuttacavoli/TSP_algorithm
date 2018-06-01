@@ -2,7 +2,7 @@
 class Tour:
 	def __init__(self, startCity):
 		self.tourLength = 0
-		self.path = [startCity]
+		self.path = [startCity.id]
 	
 
 	#####################################################################################
@@ -14,6 +14,6 @@ class Tour:
 	#	- distance: the distance to the city to travel to
 	# Outputs: void
 	#####################################################################################
-	def addCityToTour(self, cityId, distance):
-		self.path.append(cityId)
+	def addCityToTour(self, city, distance):
+		self.path.append(city.id)
 		self.tourLength = self.tourLength + distance

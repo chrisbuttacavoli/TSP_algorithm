@@ -1,3 +1,6 @@
+from city import City
+
+
 #####################################################################################
 # ReadCityData(fileName)
 #
@@ -6,19 +9,19 @@
 # Inputs: the name of the file to read from
 # Outputs: a list of cities
 #####################################################################################
-def ReadCityData(fileName):	
-    #Read data from a target file
-    #Ref: https://stackoverflow.com/questions/29581804/python-reading-input-from-a-file
-    cities =[] 
-
-    with open(fileName, "r") as file: 
-        for line in file:
-
-            line = line.split()
-            if line:
-                    line = [int(i) for i in line]  #converts elements to integers
-                    cities.append(line)
-    return(cities)
+def ReadCityData(fileName):
+	#Read data from a target file
+	#Ref: https://stackoverflow.com/questions/29581804/python-reading-input-from-a-file
+	cities = []
+	cityIds = []
+	with open(fileName, "r") as file:
+		for line in file:
+			line = line.split()
+			if line:
+				line = [int(i) for i in line]  #converts elements to integers
+				cityIds.append(line[0])
+				cities.append(City(line[0], line[1], line[2]))
+	return cities, cityIds
 
 
 #####################################################################################

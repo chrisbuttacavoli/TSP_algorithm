@@ -8,32 +8,42 @@ import sys
 import math
 from drawGraph import plotTour
 
+
+def ReturnBestTour(tour1, tour2):
+	if tour1.tourLength > tour2.tourLength:
+		return tour2
+	return tour1
+
+
 ###########################
 # Main procedure below...
 ###########################
 ###########################
 
-bestTourLength = float('inf')
-numIterations = 20
-cities = ReadCityData(sys.argv[1])
-graph = Graph(cities) # Each edge of the graph has its own pheromones
-ants = [Ant(len(cities), city) for city in cities] # Start an ant at each city
+# Setup up our variables
+numIterations = 1
+cities, cityIds = ReadCityData(sys.argv[1])
+graph = Graph(cities, cityIds) # Each edge of the graph has its own pheromones
+bestTour = Tour(cities[0])
+bestTour.tourLength = float('inf')
 
-for n in range(1, numIterations):
+# This is our algorithm
+for n in range(0, numIterations):
+	# New ants are placed at each city every iteration
+	ants = [Ant(cityIds, startCity) for startCity in cities]
 	for ant in ants:
-		ant.move(graph)
-		#update best tour
-		if(ant.tour.tourLength < bestTourLength):
-            bestTourLength = ant.tour.tourLength
-            bestPath = ant.tour.path
-	
-	graph.updatePheromones(ants)
+		while ant.hasNotCompletedTour:
+			ant.moveToNextCity(graph)
+		bestTour = ReturnBestTour(ant.tour, bestTour)
+	graph.updatePheromones(ants, cities)
+# OutputData("somefile", bestTour)
 
 
 ## i tried a matplot demo on flip, but
 ## it seems output figure cannot be displayed
 ## on filp due to the lack of GUI 
 ## we may replace this by a simple print
-plotTour(cities, bestPath, bestTourLength)
-
-###########################
+## -- Chris: We will remove this when we
+## -- submit our code. This will just be for
+## -- us to visually confirm our results
+# plotTour(cities, bestTour)

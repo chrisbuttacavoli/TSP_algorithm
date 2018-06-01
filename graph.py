@@ -1,7 +1,8 @@
 class Graph:
-	def __init__(self, cities):
-		self.pheromones = self._initPheromones(cities)
-		self.distances = self._calculateDistances(cities) # Insert Hyoung's original function here
+	def __init__(self, cities, cityIds):
+		self.distances, self.pheromones = self._initEdges(cities) # Insert Hyoung's original function here
+		self.cities = cities
+		self.cityIds = cityIds
 
 		
 	#####################################################################################
@@ -10,20 +11,23 @@ class Graph:
 	# Input: list of cities
 	# Output: 2D array of distances between each city
 	#####################################################################################
-	def _calculateDistances(self, cities):
+	def _initEdges(self, cities):
 		import math
-		array2d = []
-		for i in range(0, len(cities)):
-			newElement = []
-			for j in range(0, len(cities)):
-				x = cities[i][1] - cities[j][1]
-				y = cities[i][2] - cities[j][2]
-				temp = (x*x) + (y*y)
-				distance = int(math.sqrt(temp))
-				newElement.append(distance)
-			array2d.append(newElement)
 
-		return(array2d)
+		distances = []
+		pheromones = []
+		for i, city1 in enumerate(cities):
+			distanceRow = []
+			pheromoneRow = []
+			for j, city2 in enumerate(cities):
+				temp = (city1.x * city1.x) + (city2.y * city2.y)
+				distance = int(math.sqrt(temp))
+				distanceRow.append(distance)
+				pheromoneRow.append(1)
+			
+			distances.append(distanceRow)
+			pheromones.append(pheromoneRow)
+		return distances, pheromones
 
 	
 	#####################################################################################
@@ -35,16 +39,17 @@ class Graph:
 	# be 0 since that will result in 0 denominator for the probabilistic equation.
 	# (let's use 1 as placeholder and do some fine tune later)
 	#####################################################################################
-	def _initPheromones(self, cities):
-		import math
-		pheromone2dArray = []
-		for i in range(0, len(cities)):
-			newElement = []
-			for j in range(0, len(cities)):
-				newElement.append(1)
-			pheromone2dArray.append(newElement)
+	# def _initPheromones(self, cities):
+	# 	import math
+		
+	# 	pheromone2dArray = []
+	# 	for i in range(0, len(cities)):
+	# 		newElement = []
+	# 		for j in range(0, len(cities)):
+	# 			newElement.append(1)
+	# 		pheromone2dArray.append(newElement)
 
-		return(pheromone2dArray)
+	# 	return(pheromone2dArray)
 
 
 	#####################################################################################
@@ -70,7 +75,8 @@ class Graph:
 	# Input: list of ants, list of cities
 	# Output: void
 	#####################################################################################
-	def updatePheromones(ants, cities):
+	def updatePheromones(self, ants, cities):
+		return # Need to fix this function
 		self._performEvaporation()
 		
 		Q = 1.5 #constant that is arbitrarily assigned as a place holder
