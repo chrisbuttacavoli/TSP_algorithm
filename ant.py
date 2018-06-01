@@ -36,10 +36,10 @@ class Ant:
 	# Output: void
 	#####################################################################################
 	def moveToNextCity(self, graph):
+		# A safe-guard clause
 		if self.hasCompletedTour:
 			return
 		
-		# If we have visited everything, go back to the start city
 		nextCity = self._getNextCity(graph)
 
 		# Update the ant's tour
@@ -124,6 +124,7 @@ class Ant:
 	# Output: a city (unvisited)
 	#####################################################################################
 	def _getNextCity(self, graph):
+		# If we have visited everything, go back to the start city
 		if len(self.unvisitedCityIds) == 0:
 			return self.startCity
 
