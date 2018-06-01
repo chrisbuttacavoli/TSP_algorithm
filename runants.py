@@ -21,8 +21,10 @@ def ReturnBestTour(tour1, tour2):
 ###########################
 
 # Setup up our variables
+readFile = sys.argv[1]
+writeFile = "mytour" # + ".tour"
 numIterations = 1
-cities, cityIds = ReadCityData(sys.argv[1])
+cities, cityIds = ReadCityData(readFile)
 graph = Graph(cities, cityIds) # Each edge of the graph has its own pheromones
 bestTour = Tour(cities[0])
 bestTour.tourLength = float('inf')
@@ -36,7 +38,7 @@ for n in range(0, numIterations):
 			ant.moveToNextCity(graph)
 		bestTour = ReturnBestTour(ant.tour, bestTour)
 	graph.updatePheromones(ants, cities)
-# OutputData("somefile", bestTour)
+OutputData(writeFile, bestTour)
 
 
 ## i tried a matplot demo on flip, but

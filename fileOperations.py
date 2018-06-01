@@ -2,16 +2,12 @@ from city import City
 
 
 #####################################################################################
-# ReadCityData(fileName)
-#
 # Populates a list of cities from a text file per Instructions.pdf
 #
 # Inputs: the name of the file to read from
-# Outputs: a list of cities
+# Outputs: a list of cities and cityIds
 #####################################################################################
 def ReadCityData(fileName):
-	#Read data from a target file
-	#Ref: https://stackoverflow.com/questions/29581804/python-reading-input-from-a-file
 	cities = []
 	cityIds = []
 	with open(fileName, "r") as file:
@@ -25,7 +21,6 @@ def ReadCityData(fileName):
 
 
 #####################################################################################
-# OutputData(fileName, tour)
 # Outputs the best tour to a file.
 #
 # Inputs:
@@ -38,4 +33,7 @@ def ReadCityData(fileName):
 # - Name of output file: {inputFileName.txt}.tour
 #####################################################################################
 def OutputData(fileName, tour):
-	pass
+	with open(fileName, "w") as file:
+		file.write(str(tour.tourLength))
+		for cityId in tour.path:
+			file.write("\n" + str(cityId))

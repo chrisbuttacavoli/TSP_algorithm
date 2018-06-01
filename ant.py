@@ -10,6 +10,7 @@ class Ant:
 		self.unvisitedCityIds = self._initUnvisitedCityIds(cityIds, startCity)
 		self.APLHA = 0.2
 		self.BETA = 0.6
+		self.PHI = 0.75
 	
 #####################################################################################
 # Helper functions and properties to make the rest easier to read
@@ -24,6 +25,15 @@ class Ant:
 	
 	def isStartCity(self, city):
 		return city.id == self.startCity.id
+#####################################################################################
+# Initialization functions
+#####################################################################################
+	# Returns a 1D array containing all city ids except for the start city
+	def _initUnvisitedCityIds(self, cityIds, startCity):
+		unvisitedCityIds = list(cityIds)
+		unvisitedCityIds.remove(startCity.id)
+		return unvisitedCityIds
+
 
 	#####################################################################################
 	# This function will need to be decomposed into smaller functions to achieve
@@ -40,33 +50,25 @@ class Ant:
 		if self.hasCompletedTour:
 			return
 		
+		prevCity = self.currentCity
 		nextCity = self._getNextCity(graph)
 
 		# Update the ant's tour
-		distanceToNextCity = graph.distances[self.currentCity.id][nextCity.id]
+		distanceToNextCity = graph.distances[prevCity.id][nextCity.id]
 		self.tour.addCityToTour(nextCity, distanceToNextCity)
 
-		# Remove the next city from the unvisited list
+		# Remove the next city from the unvisited list unless the list is empty
 		if not self.isStartCity(nextCity):
 			self.unvisitedCityIds.remove(nextCity.id)
 
-		print("Ant " + str(self.id), "moved from", self.currentCity.id, "to", nextCity.id)
+		# for lulz
+		print("Ant " + str(self.id), "moved from", prevCity.id, "to", nextCity.id)
 
 		# Place ant in the next city
 		self.currentCity = nextCity
 
-
-	#####################################################################################
-	# Initializes the unvisited cities 
-	# 
-	# Input: list of city ids, the starting city
-	# Output: 1D array with size n-1 that contains the cities' ids minus the start city id
-	# (n = the number of cities in the example.txt)
-	#####################################################################################	
-	def _initUnvisitedCityIds(self, cityIds, startCity):
-		unvisitedCityIds = list(cityIds)
-		unvisitedCityIds.remove(startCity.id)
-		return unvisitedCityIds
+		# Update local pheromones on the edge we just travelled
+		self._updateLocalPheromones(prevCity, self.currentCity)
 
 
 	#####################################################################################
@@ -133,3 +135,13 @@ class Ant:
 			probabilities = self._computeProbability(self.currentCity, graph)
 			nextCity = graph.cities[self._selectNextCityId(probabilities)]
 			return nextCity
+	
+
+	#####################################################################################
+	# Places pheromones according to the formula in the report along the traversed edge
+	#
+	# Input: city1 and city2 (the cities that make up the edge)
+	# Output: none
+	#####################################################################################
+	def _updateLocalPheromones(self, city1, city2):
+		pass
