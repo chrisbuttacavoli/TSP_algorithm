@@ -36,4 +36,3 @@ def ReadCityData(fileName):
 #####################################################################################
 def OutputData(fileName, tour):
 	pass
-
