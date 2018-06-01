@@ -47,11 +47,11 @@ class Ant:
 	# Output: void
 	#####################################################################################
 	def move(self, graph):
-		
+		currentCity = self.startCity
+
 		#iteratively travel to the city until all city are visited
 		while len(self.unvisitedCities)>0 :
 			# compute the probablitites
-			currentCity = self.startCity
 			p = self._computeProbability(currentCity, graph)
 
 			# select the next city 
