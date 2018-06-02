@@ -12,7 +12,7 @@ from drawGraph import plotTour
 def Main(inputFile):
 	# Setup up our variables
 	writeFile = "mytour" # + ".tour"
-	numIterations = 25
+	numIterations = 50
 	cities = ReadCityData(inputFile)
 	graph = Graph(cities) # Each edge of the graph has its own pheromones
 	bestTour = Tour(cities[0])

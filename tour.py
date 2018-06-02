@@ -1,3 +1,6 @@
+from parameters import MIN_DIST
+
+
 # Tracks path and length of an ant's tour.
 class Tour:
 	def __init__(self, startCity):
@@ -17,5 +20,5 @@ class Tour:
 	#####################################################################################
 	def addCityToTour(self, city, distance):
 		self.path.append(city.id)
-		self.tourLength = self.tourLength + distance
-		self.cumulativeTourLength.append(self.tourLength + distance)
+		if distance != MIN_DIST:
+			self.tourLength = self.tourLength + distance

@@ -1,4 +1,4 @@
-from parameters import Q, RHO
+from parameters import Q, RHO, MIN_DIST
 
 
 class Graph:
@@ -24,6 +24,8 @@ class Graph:
 			for j, city2 in enumerate(cities):
 				temp = (city1.x - city2.x)**2 + (city1.y - city2.y)**2
 				distance = int(math.sqrt(temp))
+				if distance == 0:
+					distance = MIN_DIST
 				distanceRow.append(distance)
 				pheromoneRow.append(1)
 			
@@ -65,8 +67,8 @@ class Graph:
 				# This update does not need to take into account the previous pheromones.
 				# The evaporation function will deal with that
 				city1, city2 = ant.tour.path[pathIndex], ant.tour.path[pathIndex + 1]
-				deltaTijk = Q / ant.tour.cumulativeTourLength[city1]
-				self.pheromones[city1][city2] = deltaTijk
+				deltaTijk = Q / self.distances[city1][city2]
+				self.pheromones[city1][city2] += deltaTijk
 				self.pheromones[city2][city1] = self.pheromones[city1][city2]
 		
 		# for k in range(0, len(ants)):
