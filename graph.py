@@ -1,4 +1,4 @@
-from parameters import Q, RHO, MIN_DIST
+from parameters import Q, RHO, MIN_DIST, MIN_PHER
 
 
 class Graph:
@@ -27,7 +27,7 @@ class Graph:
 				if distance == 0:
 					distance = MIN_DIST
 				distanceRow.append(distance)
-				pheromoneRow.append(1)
+				pheromoneRow.append(MIN_PHER)
 			
 			distances.append(distanceRow)
 			pheromones.append(pheromoneRow)
