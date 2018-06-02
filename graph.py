@@ -38,13 +38,11 @@ class Graph:
 	# Output: void
 	#####################################################################################
 	def _performEvaporation(self):
-		
-		import random
-		RHO = random.uniform(0, 1) #evaporation constant
+		RHO = 0.6 #evaporation constant
 
 		for i in range(0, len(self.pheromones)):
 			for j in range(0, len(self.pheromones)):
-				self.pheromones[i][j] = self.pheromones[i][j] * RHO
+				self.pheromones[i][j] = (1 - RHO) * self.pheromones[i][j]
 
 
 	#####################################################################################
