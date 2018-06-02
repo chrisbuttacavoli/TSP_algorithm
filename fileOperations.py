@@ -33,5 +33,11 @@ def ReadCityData(fileName):
 def OutputData(fileName, tour):
 	with open(fileName, "w") as file:
 		file.write(str(tour.tourLength))
+		alreadyWroteFirstCityToFile = False
+		firstCityId = tour.path[0]
 		for cityId in tour.path:
-			file.write("\n" + str(cityId))
+			if alreadyWroteFirstCityToFile and cityId == firstCityId:
+				pass
+			else:
+				file.write("\n" + str(cityId))
+				alreadyWroteFirstCityToFile = True

@@ -13,7 +13,7 @@ import time
 def Main(inputFile):
 	# Setup up our variables
 	writeFile = "mytour" # + ".tour"
-	numIterations = 50
+	numIterations = 20
 	cities = ReadCityData(inputFile)
 	# start = time.time()
 	graph = Graph(cities) # Each edge of the graph has its own pheromones
