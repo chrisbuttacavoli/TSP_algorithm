@@ -31,6 +31,23 @@ class Graph:
 
 
 	#####################################################################################
+	# We evaporate pheromones on all edges after each completed tour of all ants.
+	# Reduces phermones along each edge by some calculate with greek letters
+	#
+	# Input: nothing
+	# Output: void
+	#####################################################################################
+	def _performEvaporation(self):
+		
+		import random
+		RHO = random.uniform(0, 1) #evaporation constant
+
+		for i in range(0, len(self.pheromones)):
+			for j in range(0, len(self.pheromones)):
+				self.pheromones[i][j] = self.pheromones[i][j] * RHO
+
+
+	#####################################################################################
 	# Updates the pheromones along each edge of the graph by looping all ants and using
 	# the formula in the report
 	#
@@ -40,6 +57,9 @@ class Graph:
 	def updatePheromones(self, ants, cities):	
 		
 		import math
+
+		self._performEvaporation()
+
 		Q = 1 # constant moved to property of the graph class
 		for k in range(0, len(ants)):
 			for i in range(0, len(self.pheromones)):
