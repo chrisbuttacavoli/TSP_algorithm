@@ -9,15 +9,13 @@ from city import City
 #####################################################################################
 def ReadCityData(fileName):
 	cities = []
-	cityIds = []
 	with open(fileName, "r") as file:
 		for line in file:
 			line = line.split()
 			if line:
 				line = [int(i) for i in line]  #converts elements to integers
-				cityIds.append(line[0])
 				cities.append(City(line[0], line[1], line[2]))
-	return cities, cityIds
+	return cities
 
 
 #####################################################################################
