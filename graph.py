@@ -43,8 +43,9 @@ class Graph:
 	#####################################################################################
 	def _performEvaporation(self):
 		for i in range(0, len(self.pheromones)):
-			for j in range(0, len(self.pheromones)):
+			for j in range(0, i):
 				self.pheromones[i][j] = (1 - RHO) * self.pheromones[i][j]
+				self.pheromones[j][i] = self.pheromones[i][j]
 
 
 	#####################################################################################
