@@ -37,7 +37,25 @@ class Graph:
 	# Input: list of ants, list of cities
 	# Output: void
 	#####################################################################################
-	def updatePheromones(self, ants, cities):		
+	def updatePheromones(self, ants, cities):	
+		
+		import math
+		Q = 1 # constant moved to property of the graph class
+		for k in range(0, len(ants)):
+			for i in range(0, len(self.pheromones)):
+				for j in range(0, len(self.pheromones)):
+					if(ants[k].tour.path[-2] == cities[i].id and ants[k].tour.path[-1] == cities[j].id ):
+						x = cities[i].x - cities[j].x 				
+						y = cities[i].y - cities[j].y
+						temp = (x**2) + (y**2)
+						
+						Lk = int(math.sqrt(temp)) #length of the tour
+						
+						self.pheromones[i][j] += Q/Lk
+						self.pheromones[j][i] = self.pheromones[i][j]
+				else:
+					pass
+				
 		# Q = 1.5 # constant moved to property of the graph class
 		
 		# for k in range(0, len(ants)):
@@ -49,4 +67,4 @@ class Graph:
 		# 				self.pheromones[j][i] = self.pheromones[i][j]
 		# 			else:
 		# 				pass
-		pass
+		
