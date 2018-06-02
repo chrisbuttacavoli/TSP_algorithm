@@ -1,3 +1,6 @@
+from parameters import Q
+
+
 class Graph:
 	def __init__(self, cities):
 		self.distances, self.pheromones = self._initEdges(cities) # Insert Hyoung's original function here
@@ -57,7 +60,6 @@ class Graph:
 		# Evaporation should be performed first
 		self._performEvaporation()
 
-		Q = 500
 		# Go over each ant, look at their tour, add add pheromones to those edges
 		for k, ant in enumerate(ants):
 			# Loop over the ant's tour path and find the edge to update
@@ -68,7 +70,7 @@ class Graph:
 				deltaTijk = Q / ant.tour.tourLength
 				self.pheromones[city1][city2] = deltaTijk
 				self.pheromones[city2][city1] = self.pheromones[city1][city2]
-
+		
 		# for k in range(0, len(ants)):
 		# 	for i in range(0, len(self.pheromones)):
 		# 		for j in range(0, len(self.pheromones)):

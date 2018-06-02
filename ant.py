@@ -1,4 +1,5 @@
 from tour import Tour
+from parameters import ALPHA, BETA
 
 
 class Ant:
@@ -77,8 +78,6 @@ class Ant:
 	#####################################################################################	
 	def _computeProbability(self, currentCity, graph):
 		denominator = 0
-		ALPHA = 0.2
-		BETA = 0.6
 
 		# Figure out the denominator to be used for each city
 		for unvisitedCity in self.unvisitedCities:
