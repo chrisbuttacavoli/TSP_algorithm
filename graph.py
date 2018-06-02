@@ -1,4 +1,4 @@
-from parameters import Q
+from parameters import Q, RHO
 
 
 class Graph:
@@ -40,8 +40,6 @@ class Graph:
 	# Output: void
 	#####################################################################################
 	def _performEvaporation(self):
-		RHO = 0.6 #evaporation constant
-
 		for i in range(0, len(self.pheromones)):
 			for j in range(0, len(self.pheromones)):
 				self.pheromones[i][j] = (1 - RHO) * self.pheromones[i][j]
