@@ -15,15 +15,15 @@ def Main(inputFile):
 	writeFile = "mytour" # + ".tour"
 	numIterations = 50
 	cities = ReadCityData(inputFile)
-	start = time.time()
+	# start = time.time()
 	graph = Graph(cities) # Each edge of the graph has its own pheromones
-	print(time.time() - start)
+	# print(time.time() - start)
 	bestTour = Tour(cities[0])
 	bestTour.tourLength = float('inf')
 
 	# This is our algorithm
 	for n in range(0, numIterations):
-		# print("Iteration", n + 1, "of", numIterations)
+		print("Iteration", n + 1, "of", numIterations)
 		# New ants are placed at each city every iteration
 		ants = [Ant(cities, startCity) for startCity in cities]
 		for ant in ants:
@@ -38,7 +38,7 @@ def Main(inputFile):
 def ReturnBestTour(tour1, tour2):
 	if tour1.tourLength > tour2.tourLength:
 		return tour2
-	# print("Best tour is now", tour1.tourLength)
+	print("Best tour is now", tour1.tourLength)
 	return tour1
 
 

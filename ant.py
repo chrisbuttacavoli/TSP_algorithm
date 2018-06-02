@@ -53,20 +53,16 @@ class Ant:
 		nextCity = self._getNextCity(graph)
 
 		# Update the ant's tour
-		distanceToNextCity = graph.distances[prevCity.id][nextCity.id]
-		self.tour.addCityToTour(nextCity, distanceToNextCity)
+		if nextCity.id > prevCity.id:
+			self.tour.addCityToTour(nextCity, graph.distances[nextCity.id][prevCity.id])
+		else:
+			self.tour.addCityToTour(nextCity, graph.distances[prevCity.id][nextCity.id])
 
 		# Remove the next city from the unvisited list unless the list is empty
 		self._removeCityFromUnvisitedCities(nextCity)
 
-		# for lulz
-		# print("Ant " + str(self.id), "moved from", prevCity.id, "to", nextCity.id)
-
 		# Place ant in the next city
 		self.currentCity = nextCity
-
-		# Update local pheromones on the edge we just travelled
-		#self._updateLocalPheromones(prevCity, self.currentCity)
 
 
 	#####################################################################################
@@ -81,34 +77,31 @@ class Ant:
 
 		# Figure out the denominator to be used for each city
 		for unvisitedCity in self.unvisitedCities:
-			Tij = graph.pheromones[currentCity.id][unvisitedCity.id]
-			nij = 1 / (graph.distances[currentCity.id][unvisitedCity.id])
+			nij = 0
+			Tij = 0
+			if unvisitedCity.id > currentCity.id:
+				nij = 1 / graph.distances[unvisitedCity.id][currentCity.id]
+				Tij = graph.pheromones[unvisitedCity.id][currentCity.id]
+			else:
+				nij = 1 / graph.distances[currentCity.id][unvisitedCity.id]
+				Tij = graph.pheromones[currentCity.id][unvisitedCity.id]
 			denominator += (Tij**ALPHA) * (nij**BETA)
 		
 		# Push probabilities to an array
 		probabilities = []
 		for unvisitedCity in self.unvisitedCities:
-			Tij = graph.pheromones[currentCity.id][unvisitedCity.id]
-			nij = 1 / (graph.distances[currentCity.id][unvisitedCity.id])
+			if unvisitedCity.id > currentCity.id:
+				nij = 1 / graph.distances[unvisitedCity.id][currentCity.id]
+				Tij = graph.pheromones[unvisitedCity.id][currentCity.id]
+			else:
+				nij = 1 / graph.distances[currentCity.id][unvisitedCity.id]
+				Tij = graph.pheromones[currentCity.id][unvisitedCity.id]
+
 			numerator = (Tij**ALPHA) * (nij**BETA)
 			probabilities.append(numerator / denominator)
 
 		return probabilities
-		# for i in range(0, len(self.unvisitedCities)):
-		# 	unvisitedCity = self.unvisitedCities[i]
-		# 	pheromone = graph.pheromones[currentCity.id][unvisitedCity.id]
-		# 	distInvered = 1/graph.distances[currentCity.id][unvisitedCity.id]
-		# 	denominator += (pheromone**self.ALPHA) * (distInvered**self.BETA)
-
-		# p = []
-		# for i in range(0, len(self.unvisitedCities)):
-		# 	unvisitedCity = self.unvisitedCities[i]
-		# 	pheromone = graph.pheromones[currentCity.id][unvisitedCity.id]
-		# 	distInvered = 1/graph.distances[currentCity.id][unvisitedCity.id]
-		# 	p.append((pheromone**self.ALPHA) * (distInvered**self.BETA) / denominator)
-
-		# return p
-
+		
 
 	#####################################################################################
 	# Select the next city by comparing a random number (between 0 to 1) with an 
@@ -157,13 +150,3 @@ class Ant:
 				if city.id == cityToRemove.id:
 					del self.unvisitedCities[i]
 					break
-
-
-	#####################################################################################
-	# Places pheromones according to the formula in the report along the traversed edge
-	#
-	# Input: city1 and city2 (the cities that make up the edge)
-	# Output: none
-	#####################################################################################
-	def _updateLocalPheromones(self, city1, city2):
-		pass
