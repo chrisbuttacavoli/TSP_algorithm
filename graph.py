@@ -2,7 +2,6 @@ class Graph:
 	def __init__(self, cities):
 		self.distances, self.pheromones = self._initEdges(cities) # Insert Hyoung's original function here
 		self.cities = cities
-		self.Q = 1.5
 
 		
 	#####################################################################################
@@ -52,27 +51,38 @@ class Graph:
 	# Input: list of ants, list of cities
 	# Output: void
 	#####################################################################################
-	def updatePheromones(self, ants, cities):	
-		
-		import math
+	def updatePheromones(self, ants, cities):			
+		# import math
 
+		# Evaporation should be performed first
 		self._performEvaporation()
 
-		Q = 1 # constant moved to property of the graph class
-		for k in range(0, len(ants)):
-			for i in range(0, len(self.pheromones)):
-				for j in range(0, len(self.pheromones)):
-					if(ants[k].tour.path[-2] == cities[i].id and ants[k].tour.path[-1] == cities[j].id ):
-						x = cities[i].x - cities[j].x 				
-						y = cities[i].y - cities[j].y
-						temp = (x**2) + (y**2)
+		Q = 500
+		# Go over each ant, look at their tour, add add pheromones to those edges
+		for k, ant in enumerate(ants):
+			# Loop over the ant's tour path and find the edge to update
+			for pathIndex in range(len(ant.tour.path) - 1):
+				# This update does not need to take into account the previous pheromones.
+				# The evaporation function will deal with that
+				city1, city2 = ant.tour.path[pathIndex], ant.tour.path[pathIndex + 1]
+				deltaTijk = Q / ant.tour.tourLength
+				self.pheromones[city1][city2] = deltaTijk
+				self.pheromones[city2][city1] = self.pheromones[city1][city2]
+
+		# for k in range(0, len(ants)):
+		# 	for i in range(0, len(self.pheromones)):
+		# 		for j in range(0, len(self.pheromones)):
+		# 			if(ants[k].tour.path[-2] == cities[i].id and ants[k].tour.path[-1] == cities[j].id ):
+		# 				x = cities[i].x - cities[j].x 				
+		# 				y = cities[i].y - cities[j].y
+		# 				temp = (x**2) + (y**2)
 						
-						Lk = int(math.sqrt(temp)) #length of the tour
+		# 				Lk = int(math.sqrt(temp)) #length of the tour
 						
-						self.pheromones[i][j] += Q/Lk
-						self.pheromones[j][i] = self.pheromones[i][j]
-				else:
-					pass
+		# 				self.pheromones[i][j] += Q/Lk
+		# 				self.pheromones[j][i] = self.pheromones[i][j]
+		# 		else:
+		# 			pass
 				
 		# Q = 1.5 # constant moved to property of the graph class
 		

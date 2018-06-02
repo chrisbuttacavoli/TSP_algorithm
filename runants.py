@@ -12,7 +12,7 @@ from drawGraph import plotTour
 def Main(inputFile):
 	# Setup up our variables
 	writeFile = "mytour" # + ".tour"
-	numIterations = 1
+	numIterations = 20
 	cities = ReadCityData(inputFile)
 	graph = Graph(cities) # Each edge of the graph has its own pheromones
 	bestTour = Tour(cities[0])
@@ -20,6 +20,7 @@ def Main(inputFile):
 
 	# This is our algorithm
 	for n in range(0, numIterations):
+		print("Iteration", n, "of", numIterations)
 		# New ants are placed at each city every iteration
 		ants = [Ant(cities, startCity) for startCity in cities]
 		for ant in ants:
@@ -34,6 +35,7 @@ def Main(inputFile):
 def ReturnBestTour(tour1, tour2):
 	if tour1.tourLength > tour2.tourLength:
 		return tour2
+	print("Best tour is now", tour1.tourLength)
 	return tour1
 
 

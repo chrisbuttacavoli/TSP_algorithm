@@ -8,9 +8,7 @@ class Ant:
 		self.startCity = startCity
 		self.tour = Tour(startCity)
 		self.unvisitedCities = self._initUnvisitedCities(cities, startCity)
-		self.APLHA = 0.2
-		self.BETA = 0.6
-		self.PHI = 0.75
+
 	
 #####################################################################################
 # Helper functions and properties to make the rest easier to read
@@ -61,7 +59,7 @@ class Ant:
 		self._removeCityFromUnvisitedCities(nextCity)
 
 		# for lulz
-		print("Ant " + str(self.id), "moved from", prevCity.id, "to", nextCity.id)
+		# print("Ant " + str(self.id), "moved from", prevCity.id, "to", nextCity.id)
 
 		# Place ant in the next city
 		self.currentCity = nextCity
@@ -79,21 +77,38 @@ class Ant:
 	#####################################################################################	
 	def _computeProbability(self, currentCity, graph):
 		denominator = 0
+		ALPHA = 0.2
+		BETA = 0.6
 
-		for i in range(0, len(self.unvisitedCities)):
-			unvisitedCity = self.unvisitedCities[i]
-			pheromone = graph.pheromones[currentCity.id][unvisitedCity.id]
-			distInvered = 1/graph.distances[currentCity.id][unvisitedCity.id]
-			denominator += (pheromone**self.APLHA) * (distInvered**self.BETA)
+		# Figure out the denominator to be used for each city
+		for unvisitedCity in self.unvisitedCities:
+			Tij = graph.pheromones[currentCity.id][unvisitedCity.id]
+			nij = 1 / (graph.distances[currentCity.id][unvisitedCity.id])
+			denominator += (Tij**ALPHA) * (nij**BETA)
+		
+		# Push probabilities to an array
+		probabilities = []
+		for unvisitedCity in self.unvisitedCities:
+			Tij = graph.pheromones[currentCity.id][unvisitedCity.id]
+			nij = 1 / (graph.distances[currentCity.id][unvisitedCity.id])
+			numerator = (Tij**ALPHA) * (nij**BETA)
+			probabilities.append(numerator / denominator)
 
-		p = []
-		for i in range(0, len(self.unvisitedCities)):
-			unvisitedCity = self.unvisitedCities[i]
-			pheromone = graph.pheromones[currentCity.id][unvisitedCity.id]
-			distInvered = 1/graph.distances[currentCity.id][unvisitedCity.id]
-			p.append((pheromone**self.APLHA) * (distInvered**self.BETA) / denominator)
+		return probabilities
+		# for i in range(0, len(self.unvisitedCities)):
+		# 	unvisitedCity = self.unvisitedCities[i]
+		# 	pheromone = graph.pheromones[currentCity.id][unvisitedCity.id]
+		# 	distInvered = 1/graph.distances[currentCity.id][unvisitedCity.id]
+		# 	denominator += (pheromone**self.ALPHA) * (distInvered**self.BETA)
 
-		return p
+		# p = []
+		# for i in range(0, len(self.unvisitedCities)):
+		# 	unvisitedCity = self.unvisitedCities[i]
+		# 	pheromone = graph.pheromones[currentCity.id][unvisitedCity.id]
+		# 	distInvered = 1/graph.distances[currentCity.id][unvisitedCity.id]
+		# 	p.append((pheromone**self.ALPHA) * (distInvered**self.BETA) / denominator)
+
+		# return p
 
 
 	#####################################################################################
