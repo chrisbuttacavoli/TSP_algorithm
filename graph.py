@@ -16,21 +16,17 @@ class Graph:
 	def _initEdges(self, cities):
 		import math
 
-		distances = []
-		pheromones = []
-		for i, city1 in enumerate(cities):
-			distanceRow = []
-			pheromoneRow = []
-			for j, city2 in enumerate(cities):
-				temp = (city1.x - city2.x)**2 + (city1.y - city2.y)**2
+		distances = [[0] * len(cities) for _ in cities]
+		pheromones = [[MIN_PHER] * len(cities) for _ in cities]
+		for i, fromCity in enumerate(cities):
+			for j in range(0, i):
+				toCity = cities[j]
+				temp = (fromCity.x - toCity.x)**2 + (fromCity.y - toCity.y)**2
 				distance = int(math.sqrt(temp))
 				if distance == 0:
 					distance = MIN_DIST
-				distanceRow.append(distance)
-				pheromoneRow.append(MIN_PHER)
-			
-			distances.append(distanceRow)
-			pheromones.append(pheromoneRow)
+				distances[fromCity.id][toCity.id] = distance
+				distances[toCity.id][fromCity.id] = distance
 		return distances, pheromones
 
 
