@@ -1,5 +1,5 @@
 from parameters import Q, RHO, MIN_DIST, MIN_PHER
-
+from numpy import uint16
 
 class Graph:
 	def __init__(self, cities):
@@ -25,7 +25,7 @@ class Graph:
 			for j in range(0, i):
 				toCity = cities[j]
 				temp = (fromCity.x - toCity.x)**2 + (fromCity.y - toCity.y)**2
-				distance = int(math.sqrt(temp))
+				distance = uint16(math.sqrt(temp))
 				if distance == 0:
 					distance = MIN_DIST
 				distanceRow.append(distance)
