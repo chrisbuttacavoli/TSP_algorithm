@@ -20,7 +20,7 @@ class Graph:
 			distanceRow = []
 			pheromoneRow = []
 			for j, city2 in enumerate(cities):
-				temp = (city1.x * city1.x) + (city2.y * city2.y)
+				temp = (city1.x - city2.x)**2 + (city1.y - city2.y)**2
 				distance = int(math.sqrt(temp))
 				distanceRow.append(distance)
 				pheromoneRow.append(1)
