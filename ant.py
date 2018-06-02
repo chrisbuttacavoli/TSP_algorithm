@@ -2,12 +2,12 @@ from tour import Tour
 
 
 class Ant:
-	def __init__(self, cityIds, startCity):
+	def __init__(self, cities, startCity):
 		self.currentCity = startCity
 		self.id = startCity.id
 		self.startCity = startCity
 		self.tour = Tour(startCity)
-		self.unvisitedCityIds = self._initUnvisitedCityIds(cityIds, startCity)
+		self.unvisitedCities = self._initUnvisitedCities(cities, startCity)
 		self.APLHA = 0.2
 		self.BETA = 0.6
 		self.PHI = 0.75
@@ -17,7 +17,7 @@ class Ant:
 #####################################################################################
 	@property
 	def hasCompletedTour(self):
-		return len(self.unvisitedCityIds) == 0 and \
+		return len(self.unvisitedCities) == 0 and \
 				self.currentCity.id == self.startCity.id
 	@property
 	def hasNotCompletedTour(self):
@@ -28,17 +28,17 @@ class Ant:
 #####################################################################################
 # Initialization functions
 #####################################################################################
-	# Returns a 1D array containing all city ids except for the start city
-	def _initUnvisitedCityIds(self, cityIds, startCity):
-		unvisitedCityIds = list(cityIds)
-		unvisitedCityIds.remove(startCity.id)
-		return unvisitedCityIds
+	# Returns a 1D array containing all cities except for the start city
+	def _initUnvisitedCities(self, cities, startCity):
+		unvisitedCities = list(cities)
+		del unvisitedCities[startCity.id]
+		return unvisitedCities
 
 
 	#####################################################################################
 	# This function will need to be decomposed into smaller functions to achieve
 	# the following:
-	# - selects the city to travel to. must be a cityId in the unvisitedCityIds
+	# - selects the city to travel to. must be a cityId in the unvisitedCities
 	#		collection.
 	# - updates its Tour to include the new tour length and the path
 	#
@@ -58,8 +58,7 @@ class Ant:
 		self.tour.addCityToTour(nextCity, distanceToNextCity)
 
 		# Remove the next city from the unvisited list unless the list is empty
-		if not self.isStartCity(nextCity):
-			self.unvisitedCityIds.remove(nextCity.id)
+		self._removeCityFromUnvisitedCities(nextCity)
 
 		# for lulz
 		print("Ant " + str(self.id), "moved from", prevCity.id, "to", nextCity.id)
@@ -81,17 +80,17 @@ class Ant:
 	def _computeProbability(self, currentCity, graph):
 		denominator = 0
 
-		for i in range(0, len(self.unvisitedCityIds)):
-			unvisitedCity = self.unvisitedCityIds[i]
-			pheromone = graph.pheromones[currentCity.id][unvisitedCity]
-			distInvered = 1/graph.distances[currentCity.id][unvisitedCity]
+		for i in range(0, len(self.unvisitedCities)):
+			unvisitedCity = self.unvisitedCities[i]
+			pheromone = graph.pheromones[currentCity.id][unvisitedCity.id]
+			distInvered = 1/graph.distances[currentCity.id][unvisitedCity.id]
 			denominator += (pheromone**self.APLHA) * (distInvered**self.BETA)
 
 		p = []
-		for i in range(0, len(self.unvisitedCityIds)):
-			unvisitedCity = self.unvisitedCityIds[i]
-			pheromone = graph.pheromones[currentCity.id][unvisitedCity]
-			distInvered = 1/graph.distances[currentCity.id][unvisitedCity]
+		for i in range(0, len(self.unvisitedCities)):
+			unvisitedCity = self.unvisitedCities[i]
+			pheromone = graph.pheromones[currentCity.id][unvisitedCity.id]
+			distInvered = 1/graph.distances[currentCity.id][unvisitedCity.id]
 			p.append((pheromone**self.APLHA) * (distInvered**self.BETA) / denominator)
 
 		return p
@@ -116,7 +115,7 @@ class Ant:
 		for i in range(0, len(probabilities)):
 			accumulator += probabilities[i]
 			if accumulator >= x:
-				return self.unvisitedCityIds[i]
+				return self.unvisitedCities[i].id
 
 
 	#####################################################################################
@@ -127,7 +126,7 @@ class Ant:
 	#####################################################################################
 	def _getNextCity(self, graph):
 		# If we have visited everything, go back to the start city
-		if len(self.unvisitedCityIds) == 0:
+		if len(self.unvisitedCities) == 0:
 			return self.startCity
 
 		else:
@@ -135,7 +134,16 @@ class Ant:
 			probabilities = self._computeProbability(self.currentCity, graph)
 			nextCity = graph.cities[self._selectNextCityId(probabilities)]
 			return nextCity
-	
+
+
+	def _removeCityFromUnvisitedCities(self, cityToRemove):
+		if not self.isStartCity(cityToRemove):
+			for i, city in enumerate(self.unvisitedCities):
+				
+				if city.id == cityToRemove.id:
+					del self.unvisitedCities[i]
+					break
+
 
 	#####################################################################################
 	# Places pheromones according to the formula in the report along the traversed edge

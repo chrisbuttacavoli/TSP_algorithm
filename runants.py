@@ -13,15 +13,15 @@ def Main(inputFile):
 	# Setup up our variables
 	writeFile = "mytour" # + ".tour"
 	numIterations = 1
-	cities, cityIds = ReadCityData(inputFile)
-	graph = Graph(cities, cityIds) # Each edge of the graph has its own pheromones
+	cities = ReadCityData(inputFile)
+	graph = Graph(cities) # Each edge of the graph has its own pheromones
 	bestTour = Tour(cities[0])
 	bestTour.tourLength = float('inf')
 
 	# This is our algorithm
 	for n in range(0, numIterations):
 		# New ants are placed at each city every iteration
-		ants = [Ant(cityIds, startCity) for startCity in cities]
+		ants = [Ant(cities, startCity) for startCity in cities]
 		for ant in ants:
 			while ant.hasNotCompletedTour:
 				ant.moveToNextCity(graph)

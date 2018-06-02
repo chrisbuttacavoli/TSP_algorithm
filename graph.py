@@ -1,8 +1,7 @@
 class Graph:
-	def __init__(self, cities, cityIds):
+	def __init__(self, cities):
 		self.distances, self.pheromones = self._initEdges(cities) # Insert Hyoung's original function here
 		self.cities = cities
-		self.cityIds = cityIds
 		self.Q = 1.5
 
 		
