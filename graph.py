@@ -65,7 +65,7 @@ class Graph:
 				# This update does not need to take into account the previous pheromones.
 				# The evaporation function will deal with that
 				city1, city2 = ant.tour.path[pathIndex], ant.tour.path[pathIndex + 1]
-				deltaTijk = Q / ant.tour.tourLength
+				deltaTijk = Q / ant.tour.cumulativeTourLength[city1]
 				self.pheromones[city1][city2] = deltaTijk
 				self.pheromones[city2][city1] = self.pheromones[city1][city2]
 		

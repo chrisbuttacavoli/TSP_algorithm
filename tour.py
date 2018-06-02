@@ -3,6 +3,7 @@ class Tour:
 	def __init__(self, startCity):
 		self.tourLength = 0
 		self.path = [startCity.id]
+		self.cumulativeTourLength = []
 	
 
 	#####################################################################################
@@ -17,3 +18,4 @@ class Tour:
 	def addCityToTour(self, city, distance):
 		self.path.append(city.id)
 		self.tourLength = self.tourLength + distance
+		self.cumulativeTourLength.append(self.tourLength + distance)

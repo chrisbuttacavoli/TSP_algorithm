@@ -20,7 +20,7 @@ def Main(inputFile):
 
 	# This is our algorithm
 	for n in range(0, numIterations):
-		print("Iteration", n, "of", numIterations)
+		print("Iteration", n + 1, "of", numIterations)
 		# New ants are placed at each city every iteration
 		ants = [Ant(cities, startCity) for startCity in cities]
 		for ant in ants:
