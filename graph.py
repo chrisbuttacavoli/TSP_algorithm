@@ -66,35 +66,7 @@ class Graph:
 			for pathIndex in range(len(ant.tour.path) - 1):
 				# This update does not need to take into account the previous pheromones.
 				# The evaporation function will deal with that
-				city1, city2 = ant.tour.path[pathIndex], ant.tour.path[pathIndex + 1]
-				deltaTijk = Q / self.distances[city1][city2]
-				self.pheromones[city1][city2] += deltaTijk
-				self.pheromones[city2][city1] = self.pheromones[city1][city2]
-		
-		# for k in range(0, len(ants)):
-		# 	for i in range(0, len(self.pheromones)):
-		# 		for j in range(0, len(self.pheromones)):
-		# 			if(ants[k].tour.path[-2] == cities[i].id and ants[k].tour.path[-1] == cities[j].id ):
-		# 				x = cities[i].x - cities[j].x 				
-		# 				y = cities[i].y - cities[j].y
-		# 				temp = (x**2) + (y**2)
-						
-		# 				Lk = int(math.sqrt(temp)) #length of the tour
-						
-		# 				self.pheromones[i][j] += Q/Lk
-		# 				self.pheromones[j][i] = self.pheromones[i][j]
-		# 		else:
-		# 			pass
-				
-		# Q = 1.5 # constant moved to property of the graph class
-		
-		# for k in range(0, len(ants)):
-		# 	for i in range(0, len(self.pheromones)):
-		# 		for j in range(0, len(self.pheromones)):
-		# 			if(ants[k].currentCity == cities[i] and ants[k].nextCity == cities[j] ):
-		# 				Lk = _calculateDistances(cities[i], cities[j]) #length of the tour
-		# 				self.pheromones[i][j] += Q/Lk
-		# 				self.pheromones[j][i] = self.pheromones[i][j]
-		# 			else:
-		# 				pass
-		
+				fromCityId, toCityId = ant.tour.path[pathIndex], ant.tour.path[pathIndex + 1]
+				deltaTijk = Q / self.distances[fromCityId][toCityId]
+				self.pheromones[fromCityId][toCityId] += deltaTijk
+				self.pheromones[toCityId][fromCityId] = self.pheromones[fromCityId][toCityId]
