@@ -66,7 +66,7 @@ class Ant:
 		self.currentCity = nextCity
 
 		# Update local pheromones on the edge we just travelled
-		self._updateLocalPheromones(prevCity, self.currentCity)
+		#self._updateLocalPheromones(prevCity, self.currentCity)
 
 
 	#####################################################################################
