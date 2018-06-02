@@ -17,18 +17,18 @@ def plotTour(cities, tour):
 	plt.figure(figsize=(10,7))
 
 	#plot cities
-	plt.plot([row[1] for row in cities],[row[2] for row in cities],'rx', markersize=3)
+	plt.plot([city.x for city in cities],[city.y for city in cities],'rx', markersize=3)
 
 	#label the cities
-	for i, row in enumerate(cities):
-	    plt.annotate(row[0], (row[1], row[2]), size=8)
+	# for i, row in enumerate(cities):
+	#     plt.annotate(row[0], (row[1], row[2]), size=8)
 
 	#plot the tour
 	for i in range(0,len(tour.path)-1):
-	    x1 = cities[tour.path[i]][1]
-	    y1 = cities[tour.path[i]][2]
-	    x2 = cities[tour.path[i+1]][1]
-	    y2 = cities[tour.path[i+1]][2]
+	    x1 = cities[tour.path[i]].x
+	    y1 = cities[tour.path[i]].y
+	    x2 = cities[tour.path[i+1]].x
+	    y2 = cities[tour.path[i+1]].y
 	    plt.plot([x1, x2],[y1, y2],'c-',linewidth=0.5)
 
 	#title

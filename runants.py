@@ -28,6 +28,7 @@ def Main(inputFile):
 			bestTour = ReturnBestTour(ant.tour, bestTour)
 		graph.updatePheromones(ants, cities)
 	OutputData(writeFile, bestTour)
+	plotTour(cities, bestTour) #may comment it out when submitting to Canvas
 
 
 def ReturnBestTour(tour1, tour2):
@@ -35,15 +36,6 @@ def ReturnBestTour(tour1, tour2):
 		return tour2
 	return tour1
 
-
-## i tried a matplot demo on flip, but
-## it seems output figure cannot be displayed
-## on filp due to the lack of GUI 
-## we may replace this by a simple print
-## -- Chris: We will remove this when we
-## -- submit our code. This will just be for
-## -- us to visually confirm our results
-# plotTour(cities, bestTour)
 
 # Allows us to put the Main() function at the top of the file
 if __name__ == '__main__':
