@@ -74,7 +74,7 @@ class Ant:
 	#####################################################################################	
 	def _computeProbability(self, currentCity, graph):
 		denominator = 0
-
+		probabilities = []
 		# Figure out the denominator to be used for each city
 		for unvisitedCity in self.unvisitedCities:
 			nij = 0
@@ -86,23 +86,10 @@ class Ant:
 				nij = 1 / graph.distances[currentCity.id][unvisitedCity.id]
 				Tij = graph.pheromones[currentCity.id][unvisitedCity.id]
 			denominator += (Tij**ALPHA) * (nij**BETA)
-			
-		# Push probabilities to an array
-		probabilities = []
-		for unvisitedCity in self.unvisitedCities:
-			if unvisitedCity.id > currentCity.id:
-				nij = 1 / graph.distances[unvisitedCity.id][currentCity.id]
-				Tij = graph.pheromones[unvisitedCity.id][currentCity.id]
-			else:
-				nij = 1 / graph.distances[currentCity.id][unvisitedCity.id]
-				Tij = graph.pheromones[currentCity.id][unvisitedCity.id]
-		
 			numerator = (Tij**ALPHA) * (nij**BETA)
 			probabilities.append(numerator / denominator)
-
-		return probabilities
 		
-
+		return probabilities
 	#####################################################################################
 	# Select the next city by comparing a random number (between 0 to 1) with an 
 	# accumulator. The accumulator will accumulate the calculated probability list,
