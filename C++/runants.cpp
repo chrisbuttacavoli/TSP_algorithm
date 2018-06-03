@@ -278,37 +278,30 @@ int main(int argc, char *argv[]) {
 	int bestTourLength = numeric_limits<int>::max();
 
 	for (int iteration = 0; iteration < NUM_ITER; iteration++) {
+		cout << "Iteration " << iteration << endl;
 		Ant** ants = new Ant*[numCities];
-
-		cout << "Iteration " << iteration << ")" << endl;
 		for (int i = 0; i < numCities; i++) {
+			// Place an ant at this city
 			ants[i] = new Ant(i, numCities);
 
+			// Let ant omplete their tour
 			while (ants[i]->numUnvisitedCities >= 0) {
 				ants[i]->moveToNextCity(distances, pheromones);
 			}
 
+			// Update the best tour
 			if (ants[i]->tourLength < bestTourLength) {
 				bestTourLength = ants[i]->tourLength;
 				cout << "ants[" << i << "] found a new bestTourLength = " << bestTourLength << endl;
 			}
+		} // Ants are finished with their tours
 
-		}
-		/*
-		for (int k = 0; k < numCities; k++) {
-			for (int h = 0; h < numCities; h++) {
-				cout << pheromones[k][h] << " ";
-			}
-			cout << endl;
-		}
-		*/
-		
 		updatePheromones(ants, distances, pheromones, numCities);
 
 		for (int k = 0; k < numCities; k++) {
 			delete ants[k];
 		}
-		delete[] ants;
+		delete[] ants; // Ants are evil
 	}
 ///////////////////////////////////////////////////////////////
 // DEALLOCATION 
