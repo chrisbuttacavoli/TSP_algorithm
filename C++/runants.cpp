@@ -10,7 +10,6 @@
 #include <limits>
 
 #include "city.h"
-//#include "Ant.h"
 
 #define ALPHA 2.0
 #define BETA 0.5
@@ -60,8 +59,7 @@ public:
 	void moveToNextCity(int** distances, double** pheromones) {
 		int prevCityId = currentCityId;
 		int nextCityId = _getNextCity(distances, pheromones);
-		//cout << "next city id = " << nextCityId << endl;
-
+		
 		// Update the ant's tour
 		int distanceToAdd = distances[prevCityId][nextCityId];
 		if (distanceToAdd == 0)
@@ -90,12 +88,9 @@ public:
 			double temp;
 
 			if (unvisitedCities[cityId] == true){
-				// cout << "Unvisited city: " << cityId << endl;
 				nij = 1 / (double) distances[currentCityId][cityId];
 				Tij = pheromones[currentCityId][cityId];
-				//cout << "nij = " << nij << " Tij = " << Tij << " (i = "<< currentCityId << " j = "<< cityId
-				//	<< " distance = "<<distances[currentCityId][cityId] <<")"<<endl;
-				temp = pow(nij, ALPHA)*pow(Tij, BETA);
+				temp = pow(Tij, ALPHA)*pow(nij, BETA);
 				probabilities.push_back(temp);
 				denominator += temp;
 			}
@@ -104,17 +99,13 @@ public:
 			}
 		}
 
-		//cout << "denominator = " << denominator << endl;
-
 		// compute the probability for each city
 		for (int cityId = 0; cityId < numCities; cityId++) {
 			if (unvisitedCities[cityId] == true)
 				probabilities[cityId] = probabilities[cityId] / denominator;
 			else
 				probabilities[cityId] = 0;
-			//cout << probabilities[cityId] << endl;
 		}
-
 		return probabilities;
 	}
 
@@ -129,21 +120,19 @@ public:
 			if (accumulator >= x)
 				return i;
 		}
-
 	}
+
 
 	int _getNextCity(int** distances, double** pheromones) {
 		//If we have visited everything, go back to the start city
 		if (numUnvisitedCities == 0)
 			return startCityId;
 		else {
-		//elect the next city based on probabilities
+		//Aelect the next city based on probabilities
 			int nextCityId = _selectNextCityId(_computeProbability(currentCityId,distances,pheromones));
 			return nextCityId;
 		}
 	}
-
-
 };
 
 
@@ -168,7 +157,6 @@ void updatePheromones(Ant** ants, int** distances, double** pheromones, int numC
 			int toCityId = ants[k]->tour[j + 1];
 
 			int distance = distances[fromCityId][toCityId];
-			//cout << "Q / (double)distance" << endl;
 			pheromones[fromCityId][toCityId] += Q / (double)distance;
 			pheromones[toCityId][fromCityId] = pheromones[fromCityId][toCityId];
 		}
@@ -252,7 +240,6 @@ int main(int argc, char *argv[]) {
 	
 	for (int i = 0; i < numCities; i++) {
 		for (int j = 0; j <= i; j++) {
-			// NEED POW
 			double temp = pow(cities[j].x - cities[i].x, 2) +
 					pow(cities[j].y - cities[i].y, 2);
 			int distance = (int)sqrt(temp);
@@ -268,7 +255,7 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
-	cout << "Done building distances and pheroomones " << endl;
+	cout << "Done building distances and pheromones " << endl;
 
 
 ///////////////////////////////////////////////////////////////
@@ -284,16 +271,11 @@ int main(int argc, char *argv[]) {
 			// Place an ant at this city
 			ants[i] = new Ant(i, numCities);
 
+			cout << "Ant " << i << " completed his tour" << endl;
 			// Let ant complete its tour
 			while (ants[i]->numUnvisitedCities >= 0) {
 				ants[i]->moveToNextCity(distances, pheromones);
 			}
-
-			// cout << "Tour was: [";
-			// for (int z = 0; z < ants[i]->tour.size(); z++) {
-			// 	cout << ants[i]->tour[z] << ", ";
-			// }
-			// cout << "]" << endl;
 
 			// Update the best tour
 			if (ants[i]->tourLength < bestTourLength) {
