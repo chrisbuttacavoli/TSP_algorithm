@@ -18,7 +18,7 @@
 #define RHO 0.6
 #define MIN_DIST 1
 #define MIN_PHER 0.1
-#define NUM_ITER 30
+#define NUM_ITER 50
 
 using namespace std;
 
@@ -46,6 +46,8 @@ public:
 		this->tour.push_back(startCityId);
 		this->numUnvisitedCities = numCities - 1;
 
+		// Fill an array value boolean values representing if we have visited the city
+		// If the position == the startCity ID, say we have visited it already with false
 		for (int i = 0; i < numCities; i++) {
 			if (i == startCityId)
 				this->unvisitedCities.push_back(false);
@@ -61,8 +63,11 @@ public:
 		//cout << "next city id = " << nextCityId << endl;
 
 		// Update the ant's tour
-		tourLength += distances[prevCityId][nextCityId];
-		tour.push_back(false);
+		int distanceToAdd = distances[prevCityId][nextCityId];
+		if (distanceToAdd == 0)
+			distanceToAdd = MIN_DIST;
+		tourLength += distanceToAdd;
+		tour.push_back(nextCityId);
 	
 		// Set the next city in unvisitedCities to false
 		unvisitedCities[nextCityId] = false;
@@ -85,9 +90,9 @@ public:
 			double temp;
 
 			if (unvisitedCities[cityId] == true){
-				//cout << "Unvisited city: " << cityId << endl;
+				// cout << "Unvisited city: " << cityId << endl;
 				nij = 1 / (double) distances[currentCityId][cityId];
-				Tij = 1 / pheromones[currentCityId][cityId];
+				Tij = pheromones[currentCityId][cityId];
 				//cout << "nij = " << nij << " Tij = " << Tij << " (i = "<< currentCityId << " j = "<< cityId
 				//	<< " distance = "<<distances[currentCityId][cityId] <<")"<<endl;
 				temp = pow(nij, ALPHA)*pow(Tij, BETA);
@@ -115,8 +120,7 @@ public:
 
 	
 	int _selectNextCityId(vector<double> p){
-		//srand((unsigned)time(NULL));
-		//srand(5);
+		// Pick random number between 0 and 1
 		double x = ((double)rand() / (double)RAND_MAX);
 		double accumulator = 0;
 		
@@ -150,31 +154,27 @@ void updatePheromones(Ant** ants, int** distances, double** pheromones, int numC
 
 	//evaperation
 	for (int i = 0; i < numCities; i++) {
-		for (int j = 0; j <= i ; j++) {
+		for (int j = 0; j < i ; j++) {
 			pheromones[i][j] *= (1 - RHO);
-			pheromones[j][i] *= (1 - RHO);
+			pheromones[j][i] = pheromones[i][j];
 		}
 	}
 
-
-	//add pheromone
-	int tourSize = numCities + 1;
-	
 	// Go over each ant, look at their tour, add add pheromones to those edges
-	for (int i = 0; i < numCities; i++) {
+	for (int k = 0; k < numCities; k++) {
 		//Loop over the ant's tour path and find the edge to update
-		for (int j = 0; j < numCities; j++) {
-			int fromCityId = ants[i]->tour[j];
-			int toCityId = ants[i]->tour[j + 1];
+		for (int j = 0; j < ants[k]->tour.size() - 1; j++) {
+			int fromCityId = ants[k]->tour[j];
+			int toCityId = ants[k]->tour[j + 1];
 
 			int distance = distances[fromCityId][toCityId];
 			//cout << "Q / (double)distance" << endl;
 			pheromones[fromCityId][toCityId] += Q / (double)distance;
-			pheromones[toCityId][fromCityId] += Q / (double)distance;
+			pheromones[toCityId][fromCityId] = pheromones[fromCityId][toCityId];
 		}
-	}
-	
+	}	
 }
+
 
 //https://stackoverflow.com/questions/25829143/trim-whitespace-from-a-string
 string trimLeadingWhiteSpace(const string& str)
@@ -284,10 +284,16 @@ int main(int argc, char *argv[]) {
 			// Place an ant at this city
 			ants[i] = new Ant(i, numCities);
 
-			// Let ant omplete their tour
+			// Let ant complete its tour
 			while (ants[i]->numUnvisitedCities >= 0) {
 				ants[i]->moveToNextCity(distances, pheromones);
 			}
+
+			// cout << "Tour was: [";
+			// for (int z = 0; z < ants[i]->tour.size(); z++) {
+			// 	cout << ants[i]->tour[z] << ", ";
+			// }
+			// cout << "]" << endl;
 
 			// Update the best tour
 			if (ants[i]->tourLength < bestTourLength) {
