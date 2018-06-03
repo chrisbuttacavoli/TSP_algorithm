@@ -18,6 +18,7 @@
 #define RHO 0.6
 #define MIN_DIST 1
 #define MIN_PHER 0.1
+#define NUM_ITER 30
 
 using namespace std;
 
@@ -194,44 +195,6 @@ void removeTabs(std::string &x) {
 }
 
 
-// vector<City> ReadCityData(char* fileName) {
-// 	ifstream file;
-// 	string line;
-// 	int numCities = 0;
-
-// 	file.open(fileName);
-// 	if (file.is_open()) {
-// 		// size the array
-// 		while(getline(file, line)) {
-// 			numCities += 1;
-// 		}
-// 	}
-// 	file.close();
-
-// 	// City cities[numCities];
-// 	vector<City> cities;
-// 	cities.reserve(numCities);
-	
-// 	file.open(fileName);
-// 	if (file.is_open()) {
-// 		// Fill our city array
-// 		while(getline(file, line)) {
-// 			line = trim(line);
-// 			int firstSpacePos = line.find(" ");
-// 			int secondSpacePos = line.find(" ", firstSpacePos + 1);
-// 			int endLine = line.find("\n", secondSpacePos + 1);
-
-// 			int cityId = stoi(line.substr(0, firstSpacePos));
-// 			int x = stoi(line.substr(firstSpacePos, secondSpacePos));
-// 			int y = stoi(line.substr(secondSpacePos, endLine));
-
-// 			cities.push_back(City(cityId, x, y));
-// 		}
-// 	}
-// 	return cities;
-// }
-
-
 int main(int argc, char *argv[]) {
 	char *fileName = argv[1];
 	srand((unsigned)time(NULL)); 
@@ -271,25 +234,6 @@ int main(int argc, char *argv[]) {
 			spacePos = thirdPart.find_first_of(" ");
 			string y = thirdPart.substr(spacePos+1);
 
-			// int secondSpacePos = (secondPart).find(" ", firstSpacePos + 1);
-			// int endLinePos = line.find("\n", secondSpacePos + 1);
-
-			// cout << line << endl << firstSpacePos << " " << secondSpacePos << " " << endLine << endl;
-			// cout << line.substr(0, firstSpacePos) << endl;
-			// int cityId = stoi(line.substr(0, firstSpacePos));
-			// int x = stoi(line.substr(firstSpacePos, secondSpacePos - firstSpacePos + 1));
-			// int y = stoi(line.substr(secondSpacePos, endLine - secondSpacePos + 1));
-			
-			// string x = line.substr(firstSpacePos, secondSpacePos - firstSpacePos);
-			// string y = line.substr(secondSpacePos, endLinePos - secondSpacePos);
-			// cout << line << endl << "  " << firstSpacePos << " " << secondSpacePos << endl;
-			// cout << "Here: " << cityId << " " << x << " " << y << endl;
-			// for (int i = 0; i < line.length(); i++)
-			// 	cout << (int)line[i] << " " << endl;
-
-			// cout << line << endl;
-			//cout << "GO: " << cityId << "|" << x << "|" << y << endl;
-
 			cities.push_back(City(stoi(cityId), stoi(x), stoi(y)));
 		}
 	}
@@ -306,7 +250,6 @@ int main(int argc, char *argv[]) {
 	for (int i = 0; i < numCities; i++)
 		pheromones[i] = new double[numCities];
 	
-	// double pheromones[numCities][numCities];
 	for (int i = 0; i < numCities; i++) {
 		for (int j = 0; j <= i; j++) {
 			// NEED POW
@@ -318,8 +261,6 @@ int main(int argc, char *argv[]) {
 			}
 			
 			distances[i][j] = distance;
-			//cout << "(" << cities[i].x << ", " << cities[i].y << ")  (" << cities[j].x << ", " << cities[j].y << ")"<<endl;
-			//cout << "distances["<<i<<"]"<<"["<<j<<"] = "<<distances[i][j] << endl;
 			distances[j][i] = distance;
 
 			pheromones[i][j] = MIN_PHER;
@@ -329,17 +270,17 @@ int main(int argc, char *argv[]) {
 
 	cout << "Done building distances and pheroomones " << endl;
 
+
 ///////////////////////////////////////////////////////////////
-// Ant
+// ALGORITHM
 ///////////////////////////////////////////////////////////////
+	
 	int bestTourLength = numeric_limits<int>::max();
-	int iteration = 30;
 
-
-	for (int count = 0; count < iteration; count++) {
+	for (int iteration = 0; iteration < NUM_ITER; iteration++) {
 		Ant** ants = new Ant*[numCities];
 
-		cout << "Now at iteration (" << count << ")" << endl;
+		cout << "Iteration " << iteration << ")" << endl;
 		for (int i = 0; i < numCities; i++) {
 			ants[i] = new Ant(i, numCities);
 
@@ -370,7 +311,7 @@ int main(int argc, char *argv[]) {
 		delete[] ants;
 	}
 ///////////////////////////////////////////////////////////////
-// 
+// DEALLOCATION 
 ///////////////////////////////////////////////////////////////
 
 	for (int i = 0; i < numCities; ++i) {
