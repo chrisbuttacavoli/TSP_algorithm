@@ -9,9 +9,17 @@
 #include <time.h> 
 #include <limits>
 
+
 #include "city.h"
 #include "ant.h"
 #include "parameters.h"
+
+#define MAX_RUN_TIME 175000000
+
+//time
+#include <chrono>
+using namespace std::chrono;
+
 
 using namespace std;
 
@@ -64,7 +72,12 @@ void removeTabs(std::string &x) {
 
 
 int main(int argc, char *argv[]) {
-	char *fileName = argv[1];
+	
+	//time measure
+	auto start = high_resolution_clock::now();
+	
+	
+	string fileName = argv[1];
 	srand((unsigned)time(NULL)); 
 	
 ///////////////////////////////////////////////////////////////
@@ -142,12 +155,38 @@ int main(int argc, char *argv[]) {
 // ALGORITHM
 ///////////////////////////////////////////////////////////////
 	
+	//file output systemofstream myfile;
+	ofstream fileOut;
+	fileName.append(".tour");
+
+	fileOut.open (fileName);
+	
+	int stopper = 0; //1 indicates time expired
+	
 	int bestTourLength = numeric_limits<int>::max();
 
 	for (int iteration = 0; iteration < NUM_ITER; iteration++) {
 		cout << "Iteration " << iteration << endl;
 		Ant** ants = new Ant*[numCities];
+		
+		//stops at 3 min
+		auto stop = high_resolution_clock::now();
+		auto duration = duration_cast<microseconds>(stop - start);
+		if (duration.count() > MAX_RUN_TIME){
+			stopper = 1;//1 indicates time expired
+			break;
+		}
+		
 		for (int i = 0; i < numCities; i++) {
+			
+			//stops at 3 min
+			auto stop1 = high_resolution_clock::now();
+			auto duration = duration_cast<microseconds>(stop1 - start);
+			if (duration.count() > MAX_RUN_TIME){
+				stopper = 1;//1 indicates time expired
+				break;
+			}
+			
 			// Place an ant at this city
 			ants[i] = new Ant(i, numCities);
 
@@ -155,8 +194,21 @@ int main(int argc, char *argv[]) {
 			// Let ant complete its tour
 			while (ants[i]->numUnvisitedCities >= 0) {
 				ants[i]->moveToNextCity(distances, pheromones);
+				
+				//stops at 3 min
+				auto stop2 = high_resolution_clock::now();
+				auto duration = duration_cast<microseconds>(stop2 - start);
+				if (duration.count() > MAX_RUN_TIME){
+					stopper = 1;//1 indicates time expired
+					break;
+				}
 			}
 
+			//stops at 3 min
+			if(stopper == 1){
+				break;
+			}
+			
 			// Update the best tour
 			if (ants[i]->tourLength < bestTourLength) {
 				bestTourLength = ants[i]->tourLength;
@@ -164,6 +216,12 @@ int main(int argc, char *argv[]) {
 			}
 		} // Ants are finished with their tours
 
+		
+		//stops at 3 min
+		if(stopper == 1){
+			break;
+		}
+		
 		updatePheromones(ants, distances, pheromones, numCities);
 
 		for (int k = 0; k < numCities; k++) {
@@ -171,6 +229,11 @@ int main(int argc, char *argv[]) {
 		}
 		delete[] ants; // Ants are evil
 	}
+	
+	//outputs the best result to a file
+	fileOut << bestTourLength;
+	fileOut.close();
+	
 ///////////////////////////////////////////////////////////////
 // DEALLOCATION 
 ///////////////////////////////////////////////////////////////
