@@ -1,5 +1,6 @@
 # Specific files
 mytour
+run
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -8,6 +9,10 @@ __pycache__/
 
 # C extensions
 *.so
+
+# C++ extensions
+*.gch
+*.o
 
 # Distribution / packaging
 .Python
