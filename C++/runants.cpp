@@ -8,13 +8,16 @@
 #include <stdlib.h> 
 #include <time.h> 
 #include <limits>
-
+#include <omp.h>
 
 #include "city.h"
 #include "ant.h"
 #include "parameters.h"
 
-#define MAX_RUN_TIME 175000000
+//OpenMP does not allow the break statement, so I use continue to quickly finish all iteration 
+//may need to decrease the time since we no longer use break
+#define MAX_RUN_TIME 175000000  
+
 
 //time
 #include <chrono>
@@ -72,7 +75,20 @@ void removeTabs(std::string &x) {
 
 
 int main(int argc, char *argv[]) {
-	
+
+	//setup openMP
+	#ifndef _OPENMP
+
+		fprintf(stderr, "OpenMP is not supported here -- sorry.\n");
+
+		return 1;
+
+	#endif
+
+	cout << "max threads = " << omp_get_max_threads() << endl;
+	omp_set_num_threads(omp_get_max_threads());
+
+
 	//time measure
 	auto start = high_resolution_clock::now();
 	
@@ -131,6 +147,7 @@ int main(int argc, char *argv[]) {
 	for (int i = 0; i < numCities; i++)
 		pheromones[i] = new double[numCities];
 	
+	#pragma omp parallel for schedule(dynamic)
 	for (int i = 0; i < numCities; i++) {
 		for (int j = 0; j <= i; j++) {
 			double temp = pow(cities[j].x - cities[i].x, 2) +
@@ -165,32 +182,36 @@ int main(int argc, char *argv[]) {
 	
 	int bestTourLength = numeric_limits<int>::max();
 
-	for (int iteration = 0; iteration < NUM_ITER; iteration++) {
+	for (int iteration = 0; iteration < NUM_ITER && stopper == 0; iteration++) {
 		cout << "Iteration " << iteration << endl;
 		Ant** ants = new Ant*[numCities];
 		
 		//stops at 3 min
 		auto stop = high_resolution_clock::now();
 		auto duration = duration_cast<microseconds>(stop - start);
-		if (duration.count() > MAX_RUN_TIME){
+		if (duration.count() > MAX_RUN_TIME || stopper == 1 ){
 			stopper = 1;//1 indicates time expired
 			break;
 		}
 		
-		for (int i = 0; i < numCities; i++) {
+		#pragma omp parallel for shared(stopper)
+		for (int i = 0; i < numCities ; i++) {
+			if (stopper) continue;
+			//needed for each thread to find local maximum 
+			int localBestTourLength = bestTourLength;
 			
 			//stops at 3 min
 			auto stop1 = high_resolution_clock::now();
 			auto duration = duration_cast<microseconds>(stop1 - start);
-			if (duration.count() > MAX_RUN_TIME){
+			if (duration.count() > MAX_RUN_TIME || stopper == 1 ){
 				stopper = 1;//1 indicates time expired
-				break;
+			//	break;
 			}
 			
 			// Place an ant at this city
 			ants[i] = new Ant(i, numCities);
 
-			cout << "Ant " << i << " completed his tour" << endl;
+			//cout << "Ant " << i << " starts his tour" << endl;
 			// Let ant complete its tour
 			while (ants[i]->numUnvisitedCities >= 0) {
 				ants[i]->moveToNextCity(distances, pheromones);
@@ -198,22 +219,27 @@ int main(int argc, char *argv[]) {
 				//stops at 3 min
 				auto stop2 = high_resolution_clock::now();
 				auto duration = duration_cast<microseconds>(stop2 - start);
-				if (duration.count() > MAX_RUN_TIME){
+				if (duration.count() > MAX_RUN_TIME || stopper == 1 ){
 					stopper = 1;//1 indicates time expired
-					break;
+				//	break;
 				}
 			}
 
-			//stops at 3 min
-			if(stopper == 1){
-				break;
-			}
 			
 			// Update the best tour
-			if (ants[i]->tourLength < bestTourLength) {
-				bestTourLength = ants[i]->tourLength;
-				cout << "ants[" << i << "] found a new bestTourLength = " << bestTourLength << endl;
+			if (ants[i]->tourLength < localBestTourLength) {
+				localBestTourLength = ants[i]->tourLength;
+				cout << "ants[" << i << "] found a new bestTourLength = " << localBestTourLength << endl;
 			}
+
+			
+			//#pragma omp critical
+			{
+				if (localBestTourLength < bestTourLength) {
+					bestTourLength = localBestTourLength;
+				}
+			}
+			
 		} // Ants are finished with their tours
 
 		
@@ -222,14 +248,15 @@ int main(int argc, char *argv[]) {
 			break;
 		}
 		
-		updatePheromones(ants, distances, pheromones, numCities);
+		if (stopper == 0)
+			updatePheromones(ants, distances, pheromones, numCities);
 
 		for (int k = 0; k < numCities; k++) {
 			delete ants[k];
 		}
 		delete[] ants; // Ants are evil
 	}
-	
+	cout << "can all threads stop here? " << endl;
 	//outputs the best result to a file
 	fileOut << bestTourLength;
 	fileOut.close();
