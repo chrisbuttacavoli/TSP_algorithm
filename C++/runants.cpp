@@ -251,5 +251,6 @@ int main(int argc, char *argv[]) {
 	delete [] pheromones;
 
 	cout << "Done" << endl;
+	cout << "Program will terminate when 3 min is reached.  Press Ctrl + C to terminate now." << endl;
 	return 0;
 }
