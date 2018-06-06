@@ -22,8 +22,8 @@ def main(arr, secs_to_wait):
       sys.stderr.write("[%s] kill\n" % pipe.pid)
       os.kill(pipe.pid, SIGKILL)
 
-main(sys.argv[1:], 3*60)
+main(sys.argv[1:], 3*58)
 
 # usage:
 #   ./watch.py <program> <arguments>
-# time set to 3*60 seconds = 3 minues
+# time set to 3*58 seconds = 174 seconds (3min - 6sec)
