@@ -190,7 +190,7 @@ int main(int argc, char *argv[]) {
 			// Place an ant at this city
 			ants[i] = new Ant(i, numCities);
 
-			cout << "Ant " << i << " completed his tour" << endl;
+			// cout << "Ant " << i << " completed his tour" << endl;
 			// Let ant complete its tour
 			while (ants[i]->numUnvisitedCities >= 0) {
 				ants[i]->moveToNextCity(distances, pheromones);
