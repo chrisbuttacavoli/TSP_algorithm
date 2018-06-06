@@ -156,13 +156,9 @@ int main(int argc, char *argv[]) {
 ///////////////////////////////////////////////////////////////
 	
 	//file output systemofstream myfile;
-	ofstream fileOut;
 	fileName.append(".tour");
 
-	fileOut.open (fileName);
-	
-	int stopper = 0; //1 indicates time expired
-	
+	int stopper = 0; //1 indicates time expired	
 	int bestTourLength = numeric_limits<int>::max();
 	vector<int> bestTour;
 
@@ -214,6 +210,15 @@ int main(int argc, char *argv[]) {
 			if (ants[i]->tourLength < bestTourLength) {
 				bestTourLength = ants[i]->tourLength;
 				bestTour = ants[i]->tour;
+				
+				// Output new tour results
+				ofstream fileOut;
+				fileOut.open (fileName);
+				fileOut << bestTourLength << '\n';
+				for (int i = 0; i < numCities; i++) {
+					fileOut << bestTour[i] << '\n';
+				}
+				fileOut.close();
 				cout << "ants[" << i << "] found a new bestTourLength = " << bestTourLength << endl;
 			}
 		} // Ants are finished with their tours
@@ -232,12 +237,6 @@ int main(int argc, char *argv[]) {
 		delete[] ants; // Ants are evil
 	}
 	
-	//outputs the best result to a file
-	fileOut << bestTourLength << '\n';
-	for (int i = 0; i < numCities; i++) {
-		fileOut << bestTour[i] << '\n';
-	}
-	fileOut.close();
 	
 ///////////////////////////////////////////////////////////////
 // DEALLOCATION 
