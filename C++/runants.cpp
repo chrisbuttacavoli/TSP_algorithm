@@ -133,7 +133,7 @@ int main(int argc, char *argv[]) {
 	
 	for (int i = 0; i < numCities; i++) {
 		for (int j = 0; j <= i; j++) {
-			distance = 
+			int distance = 
 				(cities[i].x - cities[j].x) * (cities[i].x - cities[j].x) +
 				(cities[i].y - cities[j].y) * (cities[i].y - cities[j].y);
 			distance = round(sqrt(distance));
