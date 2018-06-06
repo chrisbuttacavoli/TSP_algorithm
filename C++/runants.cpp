@@ -164,6 +164,7 @@ int main(int argc, char *argv[]) {
 	int stopper = 0; //1 indicates time expired
 	
 	int bestTourLength = numeric_limits<int>::max();
+	vector<int> bestTour;
 
 	for (int iteration = 0; iteration < NUM_ITER; iteration++) {
 		cout << "Iteration " << iteration << endl;
@@ -212,6 +213,7 @@ int main(int argc, char *argv[]) {
 			// Update the best tour
 			if (ants[i]->tourLength < bestTourLength) {
 				bestTourLength = ants[i]->tourLength;
+				bestTour = ants[i]->tour;
 				cout << "ants[" << i << "] found a new bestTourLength = " << bestTourLength << endl;
 			}
 		} // Ants are finished with their tours
@@ -231,7 +233,10 @@ int main(int argc, char *argv[]) {
 	}
 	
 	//outputs the best result to a file
-	fileOut << bestTourLength;
+	fileOut << bestTourLength << '\n';
+	for (int i = 0; i < numCities; i++) {
+		fileOut << bestTour[i] << '\n';
+	}
 	fileOut.close();
 	
 ///////////////////////////////////////////////////////////////
