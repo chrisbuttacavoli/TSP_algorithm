@@ -4,4 +4,4 @@
 #define RHO 0.6
 #define MIN_DIST 1
 #define MIN_PHER 0.1
-#define NUM_ITER 20
+#define NUM_ITER 200
