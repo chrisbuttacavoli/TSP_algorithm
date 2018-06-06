@@ -10,3 +10,4 @@ clean:
 	rm *.gch -f
 	rm a.out -f
 	rm runants -f
+	rm run -f
