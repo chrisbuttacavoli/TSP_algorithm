@@ -133,11 +133,6 @@ int main(int argc, char *argv[]) {
 	
 	for (int i = 0; i < numCities; i++) {
 		for (int j = 0; j <= i; j++) {
-			double temp = pow(cities[j].x - cities[i].x, 2) +
-					pow(cities[j].y - cities[i].y, 2);
-			int distance = (int)sqrt(temp);
-
-			distance = hypot(abs(cities[i].x - cities[j].x), abs(cities[i].y - cities[j].y));
 			distance = 
 				(cities[i].x - cities[j].x) * (cities[i].x - cities[j].x) +
 				(cities[i].y - cities[j].y) * (cities[i].y - cities[j].y);
