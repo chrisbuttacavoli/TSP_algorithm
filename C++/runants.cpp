@@ -136,6 +136,12 @@ int main(int argc, char *argv[]) {
 			double temp = pow(cities[j].x - cities[i].x, 2) +
 					pow(cities[j].y - cities[i].y, 2);
 			int distance = (int)sqrt(temp);
+
+			distance = hypot(abs(cities[i].x - cities[j].x), abs(cities[i].y - cities[j].y));
+			distance = 
+				(cities[i].x - cities[j].x) * (cities[i].x - cities[j].x) +
+				(cities[i].y - cities[j].y) * (cities[i].y - cities[j].y);
+			distance = round(sqrt(distance));
 			if (distance == 0) {
 				distance = MIN_DIST;
 			}
@@ -219,7 +225,7 @@ int main(int argc, char *argv[]) {
 					fileOut << bestTour[i] << '\n';
 				}
 				fileOut.close();
-				cout << "ants[" << i << "] found a new bestTourLength = " << bestTourLength << endl;
+				cout << "Best new tour = " << bestTourLength << endl;
 			}
 		} // Ants are finished with their tours
 
