@@ -48,8 +48,8 @@ public:
 		
 		// Update the ant's tour
 		int distanceToAdd = distances[prevCityId][nextCityId];
-		if (distanceToAdd == 0)
-			distanceToAdd = MIN_DIST;
+		//if (distanceToAdd == 0)
+		//	distanceToAdd = MIN_DIST;
 		tourLength += distanceToAdd;
 		tour.push_back(nextCityId);
 	
@@ -74,7 +74,15 @@ public:
 			double temp;
 
 			if (unvisitedCities[cityId] == true){
-				nij = 1 / (double) distances[currentCityId][cityId];
+
+				int distance = distances[currentCityId][cityId];
+
+				//if the distance between two cities is 0, set it to 1 for this calculation
+				if (distance == 0) {
+					distance = MIN_DIST;
+				}
+
+				nij = 1 / (double) distance;
 				Tij = pheromones[currentCityId][cityId];
 				temp = pow(Tij, ALPHA)*pow(nij, BETA);
 				probabilities.push_back(temp);

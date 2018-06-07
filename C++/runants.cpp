@@ -14,6 +14,10 @@
 #include "ant.h"
 #include "parameters.h"
 
+#include <cstdio>
+#include <ctime>
+#include <chrono>
+
 #define MAX_RUN_TIME 175000000
 
 //time
@@ -45,6 +49,12 @@ void updatePheromones(Ant** ants, int** distances, double** pheromones, int numC
 			int toCityId = ants[k]->tour[j + 1];
 
 			int distance = distances[fromCityId][toCityId];
+
+			//if the distance between two cities is 0, set it to 1 for this calculation
+			if (distance == 0) {
+				distance = MIN_DIST;
+			}
+
 			pheromones[fromCityId][toCityId] += Q / (double)distance;
 			pheromones[toCityId][fromCityId] = pheromones[fromCityId][toCityId];
 		}
@@ -72,7 +82,10 @@ void removeTabs(std::string &x) {
 
 
 int main(int argc, char *argv[]) {
-	
+
+	//measure wall clock
+	auto wcts = std::chrono::system_clock::now();
+
 	//time measure
 	auto start = high_resolution_clock::now();
 	
@@ -111,9 +124,9 @@ int main(int argc, char *argv[]) {
 			spacePos = secondPart.find_first_of(" ");
 			string x = secondPart.substr(0, spacePos);
 
-			string thirdPart = trimLeadingWhiteSpace(secondPart.substr(cityId.length(), line.length() - cityId.length() + 1));
+			string thirdPart = secondPart;
 			spacePos = thirdPart.find_first_of(" ");
-			string y = thirdPart.substr(spacePos+1);
+			string y = trimLeadingWhiteSpace(thirdPart.substr(spacePos + 1));
 
 			cities.push_back(City(stoi(cityId), stoi(x), stoi(y)));
 		}
@@ -137,9 +150,9 @@ int main(int argc, char *argv[]) {
 				(cities[i].x - cities[j].x) * (cities[i].x - cities[j].x) +
 				(cities[i].y - cities[j].y) * (cities[i].y - cities[j].y);
 			distance = round(sqrt(distance));
-			if (distance == 0) {
-				distance = MIN_DIST;
-			}
+			//if (distance == 0) {
+			//	distance = MIN_DIST;
+			//}
 			
 			distances[i][j] = distance;
 			distances[j][i] = distance;
@@ -212,12 +225,16 @@ int main(int argc, char *argv[]) {
 				bestTourLength = ants[i]->tourLength;
 				bestTour = ants[i]->tour;
 				
+				//compare the calculated tour with ant.tourLength
+				int calTour = 0;
+
 				// Output new tour results
 				ofstream fileOut;
 				fileOut.open (fileName);
 				fileOut << bestTourLength << '\n';
 				for (int i = 0; i < numCities; i++) {
 					fileOut << bestTour[i] << '\n';
+					calTour += distances[bestTour[i]][bestTour[i+1]];
 				}
 				fileOut.close();
 				cout << "Best new tour = " << bestTourLength << endl;
@@ -237,7 +254,8 @@ int main(int argc, char *argv[]) {
 		}
 		delete[] ants; // Ants are evil
 	}
-	
+
+
 	
 ///////////////////////////////////////////////////////////////
 // DEALLOCATION 
@@ -252,5 +270,9 @@ int main(int argc, char *argv[]) {
 
 	cout << "Done" << endl;
 	cout << "Program will terminate when 3 min is reached.  Press Ctrl + C to terminate now." << endl;
+
+	//print the running (wall clock)
+	std::chrono::duration<double> wctduration = (std::chrono::system_clock::now() - wcts);
+	std::cout << "Finished in " << wctduration.count() << " seconds [Wall Clock]" << std::endl;
 	return 0;
 }
