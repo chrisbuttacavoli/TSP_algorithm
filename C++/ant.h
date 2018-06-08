@@ -8,6 +8,7 @@
 #include <stdlib.h> 
 #include <time.h> 
 #include <limits>
+#include <limits.h>
 
 #include "parameters.h"
 
@@ -43,6 +44,14 @@ public:
 	}
 	
 	void moveToNextCity(int** distances, double** pheromones) {
+		if (startCityId > 100)
+		{
+			unvisitedCities.clear();
+			tourLength = INT_MAX;
+			numUnvisitedCities = -1;
+			return;
+		}
+		
 		int prevCityId = currentCityId;
 		int nextCityId = _getNextCity(distances, pheromones);
 		

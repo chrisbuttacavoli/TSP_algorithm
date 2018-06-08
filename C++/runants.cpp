@@ -183,42 +183,42 @@ int main(int argc, char *argv[]) {
 		//stops at 3 min
 		auto stop = high_resolution_clock::now();
 		auto duration = duration_cast<microseconds>(stop - start);
-		if (duration.count() > MAX_RUN_TIME){
-			stopper = 1;//1 indicates time expired
-			break;
-		}
+		// if (duration.count() > MAX_RUN_TIME){
+		// 	stopper = 1;//1 indicates time expired
+		// 	break;
+		// }
 		
 		for (int i = 0; i < numCities; i++) {
 			
 			//stops at 3 min
 			auto stop1 = high_resolution_clock::now();
 			auto duration = duration_cast<microseconds>(stop1 - start);
-			if (duration.count() > MAX_RUN_TIME){
-				stopper = 1;//1 indicates time expired
-				break;
-			}
+			// if (duration.count() > MAX_RUN_TIME){
+			// 	stopper = 1;//1 indicates time expired
+			// 	break;
+			// }
 			
 			// Place an ant at this city
 			ants[i] = new Ant(i, numCities);
 
-			// cout << "Ant " << i << " completed his tour" << endl;
 			// Let ant complete its tour
 			while (ants[i]->numUnvisitedCities >= 0) {
 				ants[i]->moveToNextCity(distances, pheromones);
-				
+				// cout << "unvisited: " << ants[i]->numUnvisitedCities << endl;
 				//stops at 3 min
 				auto stop2 = high_resolution_clock::now();
 				auto duration = duration_cast<microseconds>(stop2 - start);
-				if (duration.count() > MAX_RUN_TIME){
-					stopper = 1;//1 indicates time expired
-					break;
-				}
+				// if (duration.count() > MAX_RUN_TIME){
+				// 	stopper = 1;//1 indicates time expired
+				// 	break;
+				// }
 			}
+			// cout << "Ant " << i << " completed his tour" << endl;
 
-			//stops at 3 min
-			if(stopper == 1){
-				break;
-			}
+			// //stops at 3 min
+			// if(stopper == 1){
+			// 	break;
+			// }
 			
 			// Update the best tour
 			if (ants[i]->tourLength < bestTourLength) {
@@ -243,9 +243,9 @@ int main(int argc, char *argv[]) {
 
 		
 		//stops at 3 min
-		if(stopper == 1){
-			break;
-		}
+		// if(stopper == 1){
+		// 	break;
+		// }
 		
 		updatePheromones(ants, distances, pheromones, numCities);
 
